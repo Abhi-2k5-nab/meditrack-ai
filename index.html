@@ -15,7 +15,6 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- Top Accessible Header -->
   <header class="bg-white border-b-2 border-slate-200 sticky top-0 z-30 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
@@ -30,7 +29,6 @@
         </div>
       </div>
 
-      <!-- Mode Switcher & Live Alarm Trigger -->
       <div class="flex flex-wrap items-center gap-2">
         <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center">
           <button id="btnSeniorMode" onclick="switchMode('senior')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer">
@@ -49,12 +47,9 @@
     </div>
   </header>
 
-  <!-- Main Container -->
   <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
 
-    <!-- ==================== SENIOR VIEW ==================== -->
     <section id="seniorView" class="space-y-6">
-      <!-- Top Daily Adherence Banner -->
       <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div class="space-y-1.5">
           <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-teal-50 text-teal-700 border border-teal-200">
@@ -79,7 +74,6 @@
         </div>
       </div>
 
-      <!-- Progress Bar -->
       <div class="bg-white rounded-2xl p-4 border-2 border-slate-200">
         <div class="flex justify-between text-sm font-bold text-slate-700 mb-2">
           <span>Daily Completion</span>
@@ -90,7 +84,6 @@
         </div>
       </div>
 
-      <!-- Time Slot Filter Tabs -->
       <div class="flex flex-wrap gap-2">
         <button onclick="setSlotFilter('All')" id="tab-All" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer">All Doses</button>
         <button onclick="setSlotFilter('Morning')" id="tab-Morning" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">☀️ Morning</button>
@@ -98,14 +91,10 @@
         <button onclick="setSlotFilter('Night')" id="tab-Night" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">🌙 Night</button>
       </div>
 
-      <!-- Large High-Contrast Medicine Cards -->
       <div id="seniorCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
     </section>
 
-    <!-- ==================== CAREGIVER & AI SCANNER VIEW ==================== -->
     <section id="caregiverView" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-      <!-- Left 7 Cols: AI Prescription / Strip Scanner -->
       <div class="lg:col-span-7 space-y-6">
         <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
           <div class="flex items-center justify-between gap-2 mb-2">
@@ -121,7 +110,6 @@
             Upload a photo of a medicine strip/prescription or paste messy dosage notes—AI converts it into large senior reminders automatically.
           </p>
 
-          <!-- Photo Upload Box -->
           <div class="mt-4">
             <label class="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl bg-slate-50 cursor-pointer transition">
               <span class="text-sm font-bold text-slate-700" id="fileLabel">📷 Tap to Upload Prescription or Medicine Strip Photo</span>
@@ -134,7 +122,6 @@
             </div>
           </div>
 
-          <!-- Text Note Box -->
           <div class="mt-4">
             <label for="rxTextInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
               Or Paste Prescription / Dosage Instructions
@@ -155,7 +142,6 @@
             <span>✨ Extract Senior Schedule with AI</span>
           </button>
 
-          <!-- AI Scan Output Preview -->
           <div id="aiScanResultBox" class="hidden mt-5 p-4 rounded-2xl bg-slate-50 border-2 border-teal-200 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold uppercase text-teal-700">AI Extracted Medicines</span>
@@ -169,7 +155,6 @@
           </div>
         </div>
 
-        <!-- AI Medication Safety & Food Interaction Check -->
         <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -192,9 +177,7 @@
         </div>
       </div>
 
-      <!-- Right 5 Cols: Manual Add & Caregiver WhatsApp Report -->
       <div class="lg:col-span-5 space-y-6">
-        <!-- Manual Add Form -->
         <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
           <h3 class="text-lg font-extrabold text-slate-900 mb-4">Add Medicine Manually</h3>
           <div class="space-y-3">
@@ -209,7 +192,7 @@
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Time Slot</label>
-                <select id="manSlot" class="w-full rounded-xl border-2 border-slate-200 px-3 py-2.5 text-sm bg-white">
+                <select id="manSlot" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm bg-white">
                   <option value="Morning">Morning (08:30 AM)</option>
                   <option value="Afternoon">Afternoon (01:30 PM)</option>
                   <option value="Night">Night (09:00 PM)</option>
@@ -236,7 +219,6 @@
           </div>
         </div>
 
-        <!-- Caregiver Share & Manage List -->
         <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-extrabold text-slate-900">Caregiver Summary</h3>
@@ -252,7 +234,6 @@
     </section>
   </main>
 
-  <!-- ==================== FULL-SCREEN VOICE ALARM MODAL ==================== -->
   <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-lg w-full p-7 border-4 border-amber-400 shadow-2xl text-center space-y-5">
       <div class="w-20 h-20 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-4xl animate-bounce">
@@ -288,61 +269,13 @@
 
   <script>
     const DEFAULT_MEDICINES = [
-      {
-        id: "m1",
-        name: "Pan-D Capsule",
-        dosage: "1 Capsule",
-        slot: "Morning",
-        time: "07:30 AM",
-        instruction: "Empty Stomach (30 mins before food)",
-        purpose: "Protects stomach from acidity",
-        pillColor: "amber",
-        stock: 8,
-        taken: true,
-        takenAt: "07:35 AM"
-      },
-      {
-        id: "m2",
-        name: "Telma 40mg",
-        dosage: "1 Tablet",
-        slot: "Morning",
-        time: "08:30 AM",
-        instruction: "After Breakfast",
-        purpose: "Keeps blood pressure steady",
-        pillColor: "blue",
-        stock: 3,
-        taken: false,
-        takenAt: null
-      },
-      {
-        id: "m3",
-        name: "Shelcal 500mg",
-        dosage: "1 Tablet",
-        slot: "Afternoon",
-        time: "01:30 PM",
-        instruction: "After Lunch",
-        purpose: "Bone strength & calcium support",
-        pillColor: "emerald",
-        stock: 12,
-        taken: false,
-        takenAt: null
-      },
-      {
-        id: "m4",
-        name: "Metformin 500mg",
-        dosage: "1 Tablet",
-        slot: "Night",
-        time: "09:00 PM",
-        instruction: "After Dinner",
-        purpose: "Controls blood sugar overnight",
-        pillColor: "rose",
-        stock: 6,
-        taken: false,
-        takenAt: null
-      }
+      { id: "m1", name: "Pan-D Capsule", dosage: "1 Capsule", slot: "Morning", time: "07:30 AM", instruction: "Empty Stomach (30 mins before food)", purpose: "Protects stomach from acidity", pillColor: "amber", stock: 8, taken: true, takenAt: "07:35 AM" },
+      { id: "m2", name: "Telma 40mg", dosage: "1 Tablet", slot: "Morning", time: "08:30 AM", instruction: "After Breakfast", purpose: "Keeps blood pressure steady", pillColor: "blue", stock: 3, taken: false, takenAt: null },
+      { id: "m3", name: "Shelcal 500mg", dosage: "1 Tablet", slot: "Afternoon", time: "01:30 PM", instruction: "After Lunch", purpose: "Bone strength & calcium support", pillColor: "emerald", stock: 12, taken: false, takenAt: null },
+      { id: "m4", name: "Metformin 500mg", dosage: "1 Tablet", slot: "Night", time: "09:00 PM", instruction: "After Dinner", purpose: "Controls blood sugar overnight", pillColor: "rose", stock: 6, taken: false, takenAt: null }
     ];
 
-    let medicines = JSON.parse(localStorage.getItem("meditrack_v1")) || structuredClone(DEFAULT_MEDICINES);
+    let medicines = JSON.parse(localStorage.getItem("meditrack_v1")) || JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
     let currentSlotFilter = "All";
     let uploadedImageBase64 = "";
     let uploadedImageMime = "image/jpeg";
@@ -378,19 +311,18 @@
       document.querySelectorAll(".slot-tab").forEach(btn => {
         btn.className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer";
       });
-      document.getElementById(`tab-${slot}`).className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer";
+      document.getElementById("tab-" + slot).className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer";
       renderSeniorCards();
     }
 
     function toggleTaken(id) {
       const med = medicines.find(m => m.id === id);
       if (!med) return;
-
       if (!med.taken) {
         med.taken = true;
         med.takenAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         if (med.stock > 0) med.stock -= 1;
-        speakText(`Marked ${med.name} as taken. Well done!`);
+        speakText("Marked " + med.name + " as taken. Well done!");
       } else {
         med.taken = false;
         med.takenAt = null;
@@ -400,15 +332,12 @@
     }
 
     function resetDayProgress() {
-      medicines.forEach(m => {
-        m.taken = false;
-        m.takenAt = null;
-      });
+      medicines.forEach(m => { m.taken = false; m.takenAt = null; });
       saveState();
     }
 
     function restoreDefaults() {
-      medicines = structuredClone(DEFAULT_MEDICINES);
+      medicines = JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
       saveState();
     }
 
@@ -417,14 +346,13 @@
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.92;
-      utterance.pitch = 1.0;
       window.speechSynthesis.speak(utterance);
     }
 
     function speakSingleMed(id) {
       const m = medicines.find(item => item.id === id);
       if (!m) return;
-      speakText(`${m.slot} medicine at ${m.time}. Take ${m.dosage} of ${m.name}, ${m.instruction}. This is for ${m.purpose}.`);
+      speakText(m.slot + " medicine at " + m.time + ". Take " + m.dosage + " of " + m.name + ", " + m.instruction + ". This is for " + m.purpose + ".");
     }
 
     function speakFullSchedule() {
@@ -433,10 +361,8 @@
         speakText("Great job! You have taken all of your medicines for today.");
         return;
       }
-      const summary = pending
-        .map(m => `${m.slot} at ${m.time}: ${m.dosage} of ${m.name}, ${m.instruction}`)
-        .join(". ");
-      speakText(`You have ${pending.length} medicines remaining today. ${summary}`);
+      const summary = pending.map(m => m.slot + " at " + m.time + ": " + m.dosage + " of " + m.name + ", " + m.instruction).join(". ");
+      speakText("You have " + pending.length + " medicines remaining today. " + summary);
     }
 
     function triggerDemoAlarm() {
@@ -444,8 +370,8 @@
       if (!nextMed) return;
       activeAlarmMedId = nextMed.id;
       document.getElementById("alarmMedName").textContent = nextMed.name;
-      document.getElementById("alarmMedDetails").textContent = `${nextMed.dosage} • ${nextMed.instruction}`;
-      document.getElementById("alarmMedPurpose").textContent = `Purpose: ${nextMed.purpose}`;
+      document.getElementById("alarmMedDetails").textContent = nextMed.dosage + " • " + nextMed.instruction;
+      document.getElementById("alarmMedPurpose").textContent = "Purpose: " + nextMed.purpose;
       document.getElementById("alarmModal").classList.remove("hidden");
       speakAlarmCurrent();
     }
@@ -453,7 +379,7 @@
     function speakAlarmCurrent() {
       const m = medicines.find(item => item.id === activeAlarmMedId);
       if (!m) return;
-      speakText(`Medicine Reminder! Please take ${m.dosage} of ${m.name}, ${m.instruction}.`);
+      speakText("Medicine Reminder! Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ".");
     }
 
     function confirmAlarmTaken() {
@@ -465,7 +391,7 @@
     }
 
     function closeAlarmModal() {
-      window.speechSynthesis?.cancel();
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
       document.getElementById("alarmModal").classList.add("hidden");
     }
 
@@ -473,11 +399,9 @@
       const total = medicines.length;
       const takenCount = medicines.filter(m => m.taken).length;
       const pct = total ? Math.round((takenCount / total) * 100) : 0;
-
-      document.getElementById("adherenceHeading").textContent = `${takenCount} of ${total} Medicines Taken Today`;
-      document.getElementById("progressPercent").textContent = `${pct}%`;
-      document.getElementById("progressBar").style.width = `${pct}%`;
-
+      document.getElementById("adherenceHeading").textContent = takenCount + " of " + total + " Medicines Taken Today";
+      document.getElementById("progressPercent").textContent = pct + "%";
+      document.getElementById("progressBar").style.width = pct + "%";
       renderSeniorCards();
       renderCaregiverManageList();
     }
@@ -485,11 +409,7 @@
     function renderSeniorCards() {
       const grid = document.getElementById("seniorCardsGrid");
       grid.innerHTML = "";
-
-      const filtered = currentSlotFilter === "All"
-        ? medicines
-        : medicines.filter(m => m.slot === currentSlotFilter);
-
+      const filtered = currentSlotFilter === "All" ? medicines : medicines.filter(m => m.slot === currentSlotFilter);
       const pillColors = {
         blue: "bg-blue-100 text-blue-800 border-blue-200",
         amber: "bg-amber-100 text-amber-800 border-amber-200",
@@ -500,46 +420,9 @@
       filtered.forEach(med => {
         const badgeStyle = pillColors[med.pillColor] || pillColors.blue;
         const lowStock = med.stock <= 3;
-
         const card = document.createElement("div");
-        card.className = `senior-card rounded-3xl p-6 border-2 shadow-sm flex flex-col justify-between gap-5 ${
-          med.taken ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200"
-        }`;
-
-        card.innerHTML = `
-          <div class="space-y-3">
-            <div class="flex items-center justify-between gap-2">
-              <span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ${badgeStyle}">
-                ${escapeHtml(med.slot)} • ${escapeHtml(med.time)}
-              </span>
-              <button onclick="speakSingleMed('${med.id}')" class="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs sm:text-sm border border-indigo-200 cursor-pointer">
-                🔊 Listen
-              </button>
-            </div>
-
-            <div>
-              <h3 class="text-2xl font-extrabold text-slate-900">${escapeHtml(med.name)}</h3>
-              <p class="text-base font-bold text-teal-700 mt-0.5">${escapeHtml(med.dosage)} — ${escapeHtml(med.instruction)}</p>
-              <p class="text-sm text-slate-600 mt-1">For: ${escapeHtml(med.purpose)}</p>
-            </div>
-
-            ${lowStock ? `
-              <div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">
-                ⚠️ Low Stock Alert: Only ${med.stock} pills left — Refill soon
-              </div>
-            ` : `
-              <div class="text-xs font-semibold text-slate-400">Remaining in strip: ${med.stock} pills</div>
-            `}
-          </div>
-
-          <button onclick="toggleTaken('${med.id}')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ${
-            med.taken
-              ? "bg-emerald-600 text-white hover:bg-emerald-700"
-              : "bg-slate-900 text-white hover:bg-teal-600"
-          }">
-            ${med.taken ? `✓ TAKEN AT ${escapeHtml(med.takenAt)} (Tap to Undo)` : "✓ MARK AS TAKEN"}
-          </button>
-        `;
+        card.className = "senior-card rounded-3xl p-6 border-2 shadow-sm flex flex-col justify-between gap-5 " + (med.taken ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200");
+        card.innerHTML = '<div class="space-y-3"><div class="flex items-center justify-between gap-2"><span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ' + badgeStyle + '">' + escapeHtml(med.slot) + ' • ' + escapeHtml(med.time) + '</span><button onclick="speakSingleMed(\'' + med.id + '\')" class="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs sm:text-sm border border-indigo-200 cursor-pointer">🔊 Listen</button></div><div><h3 class="text-2xl font-extrabold text-slate-900">' + escapeHtml(med.name) + '</h3><p class="text-base font-bold text-teal-700 mt-0.5">' + escapeHtml(med.dosage) + ' — ' + escapeHtml(med.instruction) + '</p><p class="text-sm text-slate-600 mt-1">For: ' + escapeHtml(med.purpose) + '</p></div>' + (lowStock ? '<div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">⚠️ Low Stock Alert: Only ' + med.stock + ' pills left — Refill soon</div>' : '<div class="text-xs font-semibold text-slate-400">Remaining in strip: ' + med.stock + ' pills</div>') + '</div><button onclick="toggleTaken(\'' + med.id + '\')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ' + (med.taken ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-slate-900 text-white hover:bg-teal-600') + '">' + (med.taken ? '✓ TAKEN AT ' + escapeHtml(med.takenAt) + ' (Tap to Undo)' : '✓ MARK AS TAKEN') + '</button>';
         grid.appendChild(card);
       });
     }
@@ -550,13 +433,7 @@
       medicines.forEach(med => {
         const row = document.createElement("div");
         row.className = "py-2.5 flex items-center justify-between gap-2 text-xs";
-        row.innerHTML = `
-          <div>
-            <span class="font-bold text-slate-800">${escapeHtml(med.name)}</span>
-            <span class="text-slate-500"> (${escapeHtml(med.slot)} • ${med.stock} left)</span>
-          </div>
-          <button onclick="deleteMedicine('${med.id}')" class="text-rose-600 font-bold hover:underline cursor-pointer">Remove</button>
-        `;
+        row.innerHTML = '<div><span class="font-bold text-slate-800">' + escapeHtml(med.name) + '</span><span class="text-slate-500"> (' + escapeHtml(med.slot) + ' • ' + med.stock + ' left)</span></div><button onclick="deleteMedicine(\'' + med.id + '\')" class="text-rose-600 font-bold hover:underline cursor-pointer">Remove</button>';
         list.appendChild(row);
       });
     }
@@ -568,18 +445,14 @@
 
     function addManualMedicine() {
       const name = document.getElementById("manName").value.trim();
-      if (!name) {
-        alert("Enter a medicine name first.");
-        return;
-      }
+      if (!name) { alert("Enter a medicine name first."); return; }
       const slot = document.getElementById("manSlot").value;
       const defaultTimes = { Morning: "08:30 AM", Afternoon: "01:30 PM", Night: "09:00 PM" };
-
       medicines.push({
         id: "m_" + Date.now(),
-        name,
+        name: name,
         dosage: document.getElementById("manDosage").value.trim() || "1 Tablet",
-        slot,
+        slot: slot,
         time: defaultTimes[slot],
         instruction: document.getElementById("manInstruction").value.trim() || "After Food",
         purpose: document.getElementById("manPurpose").value.trim() || "Daily prescribed care",
@@ -588,7 +461,6 @@
         taken: false,
         takenAt: null
       });
-
       document.getElementById("manName").value = "";
       document.getElementById("manPurpose").value = "";
       saveState();
@@ -596,14 +468,12 @@
     }
 
     function loadSamplePrescription() {
-      document.getElementById("rxTextInput").value =
-        "Rx Elderly Care:\n1. Tab Ecosprin 75mg (1-0-0) after breakfast - heart protection\n2. Tab Atorva 10mg (0-0-1) after dinner - cholesterol control\n3. Cap Neurobion Forte (0-1-0) after lunch - nerve & energy support";
+      document.getElementById("rxTextInput").value = "Rx Elderly Care:\n1. Tab Ecosprin 75mg (1-0-0) after breakfast - heart protection\n2. Tab Atorva 10mg (0-0-1) after dinner - cholesterol control\n3. Cap Neurobion Forte (0-1-0) after lunch - nerve & energy support";
     }
 
     function handleImageUpload(event) {
-      const file = event.target.files?.[0];
+      const file = event.target.files && event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function (e) {
         const img = new Image();
@@ -622,8 +492,7 @@
           const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
           uploadedImageBase64 = dataUrl.split(",")[1];
           uploadedImageMime = "image/jpeg";
-
-          document.getElementById("imageNameText").textContent = `Attached: ${file.name}`;
+          document.getElementById("imageNameText").textContent = "Attached: " + file.name;
           document.getElementById("imagePreviewWrap").classList.remove("hidden");
         };
         img.src = e.target.result;
@@ -643,7 +512,6 @@
         alert("Please upload a prescription photo, paste doctor notes, or click 'Load Sample Doctor Note'.");
         return;
       }
-
       const btn = document.getElementById("scanBtn");
       btn.textContent = "⏳ AI Reading Prescription...";
       btn.disabled = true;
@@ -652,19 +520,12 @@
         const res = await fetch("/api/meditrack", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "parse_prescription",
-            text,
-            imageBase64: uploadedImageBase64,
-            mimeType: uploadedImageMime
-          })
+          body: JSON.stringify({ action: "parse_prescription", text: text, imageBase64: uploadedImageBase64, mimeType: uploadedImageMime })
         });
-
         if (!res.ok) throw new Error("API fallback");
         const data = await res.json();
         showExtractedPreview(data);
       } catch (err) {
-        // Fallback parser if API key is missing/throttled during demo
         showExtractedPreview(localFallbackParse(text));
       } finally {
         btn.textContent = "✨ Extract Senior Schedule with AI";
@@ -683,12 +544,7 @@
         purpose: "Prescribed daily care",
         pillColor: i % 2 === 0 ? "blue" : "emerald"
       }));
-
-      return {
-        source: "smart-parser",
-        medicines: parsed,
-        doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders."
-      };
+      return { source: "smart-parser", medicines: parsed, doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders." };
     }
 
     function showExtractedPreview(data) {
@@ -696,18 +552,12 @@
       document.getElementById("aiScanResultBox").classList.remove("hidden");
       document.getElementById("scanEngineTag").textContent = data.source === "gemini-ai" ? "Gemini 3.8 AI" : "Smart Parser";
       document.getElementById("doctorSummaryText").textContent = data.doctorNoteSummary || "Extracted daily schedule below:";
-
       const list = document.getElementById("extractedList");
       list.innerHTML = "";
       pendingExtractedMeds.forEach(m => {
         const div = document.createElement("div");
         div.className = "p-3 rounded-xl bg-white border border-slate-200 text-xs flex justify-between items-center";
-        div.innerHTML = `
-          <div>
-            <div class="font-extrabold text-slate-900">${escapeHtml(m.name)} (${escapeHtml(m.dosage)})</div>
-            <div class="text-slate-500">${escapeHtml(m.slot)} • ${escapeHtml(m.instruction)} — ${escapeHtml(m.purpose)}</div>
-          </div>
-        `;
+        div.innerHTML = '<div><div class="font-extrabold text-slate-900">' + escapeHtml(m.name) + ' (' + escapeHtml(m.dosage) + ')</div><div class="text-slate-500">' + escapeHtml(m.slot) + ' • ' + escapeHtml(m.instruction) + ' — ' + escapeHtml(m.purpose) + '</div></div>';
         list.appendChild(div);
       });
     }
@@ -737,12 +587,11 @@
       const btn = document.getElementById("safetyBtn");
       btn.textContent = "Checking...";
       btn.disabled = true;
-
       try {
         const res = await fetch("/api/meditrack", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "check_interactions", medicines })
+          body: JSON.stringify({ action: "check_interactions", medicines: medicines })
         });
         if (!res.ok) throw new Error("Fallback");
         const data = await res.json();
@@ -751,12 +600,7 @@
         renderSafetyBox({
           safetyStatus: "Timing Tips",
           headline: "Space empty-stomach acidity capsules at least 30 minutes before breakfast.",
-          alerts: [
-            {
-              title: "Meal Spacing Rule",
-              detail: "Take empty-stomach medicines with plain water first, then take blood pressure and diabetes tablets after meals."
-            }
-          ],
+          alerts: [{ title: "Meal Spacing Rule", detail: "Take empty-stomach medicines with plain water first, then take blood pressure and diabetes tablets after meals." }],
           elderlyTip: "Keep a full bottle of water next to the morning pill organizer to prevent skipped doses."
         });
       } finally {
@@ -769,43 +613,36 @@
       document.getElementById("safetyResultBox").classList.remove("hidden");
       document.getElementById("safetyHeadline").textContent = data.headline;
       document.getElementById("safetyBadge").textContent = data.safetyStatus;
-      document.getElementById("elderlyTipText").textContent = `💡 Senior Care Tip: ${data.elderlyTip}`;
-
+      document.getElementById("elderlyTipText").textContent = "💡 Senior Care Tip: " + data.elderlyTip;
       const list = document.getElementById("safetyAlertsList");
       list.innerHTML = "";
       (data.alerts || []).forEach(a => {
         const div = document.createElement("div");
         div.className = "p-3 rounded-xl bg-white border border-indigo-100 text-xs";
-        div.innerHTML = `<strong class="text-slate-900">${escapeHtml(a.title)}:</strong> <span class="text-slate-600">${escapeHtml(a.detail)}</span>`;
+        div.innerHTML = '<strong class="text-slate-900">' + escapeHtml(a.title) + ':</strong> <span class="text-slate-600">' + escapeHtml(a.detail) + '</span>';
         list.appendChild(div);
       });
     }
 
     function copyCaregiverReport() {
-      const taken = medicines.filter(m => m.taken).map(m => `✅ ${m.name} (${m.takenAt})`);
-      const pending = medicines.filter(m => !m.taken).map(m => `⏳ ${m.name} (${m.slot})`);
-      const lowStock = medicines.filter(m => m.stock <= 3).map(m => `⚠️ Refill ${m.name} (${m.stock} left)`);
-
+      const taken = medicines.filter(m => m.taken).map(m => "✅ " + m.name + " (" + m.takenAt + ")");
+      const pending = medicines.filter(m => !m.taken).map(m => "⏳ " + m.name + " (" + m.slot + ")");
+      const lowStock = medicines.filter(m => m.stock <= 3).map(m => "⚠️ Refill " + m.name + " (" + m.stock + " left)");
       const report = [
         "📋 *MediTrack Daily Caregiver Update*",
-        `Completed (${taken.length}/${medicines.length}):`,
+        "Completed (" + taken.length + "/" + medicines.length + "):",
         ...(taken.length ? taken : ["None yet"]),
         "",
         "Upcoming:",
         ...(pending.length ? pending : ["All done for today!"]),
         ...(lowStock.length ? ["", "Refill Alerts:", ...lowStock] : [])
       ].join("\n");
-
-      navigator.clipboard?.writeText(report);
+      if (navigator.clipboard) navigator.clipboard.writeText(report);
       alert("Caregiver WhatsApp report copied to clipboard!\n\n" + report);
     }
 
     function escapeHtml(str) {
-      return String(str || "")
-        .replace(/&/g, "&")
-        .replace(/</g, "<")
-        .replace(/>/g, ">")
-        .replace(/"/g, """);
+      return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
     renderAll();
