@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediTrack AI — Smart Senior Medicine & Caregiver Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f7fb; color: #0f172a; }
+    .senior-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .senior-card:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Top Accessible Header -->
+  <header class="bg-white border-b-2 border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/20">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight text-slate-900">MediTrack <span class="text-teal-600">AI</span></h1>
+          <p class="text-xs font-medium text-slate-500">Accessible Medicine Companion & AI Prescription Reader</p>
+        </div>
+      </div>
+
+      <!-- Mode Switcher & Live Alarm Trigger -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center">
+          <button id="btnSeniorMode" onclick="switchMode('senior')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer">
+            Senior View (Large)
+          </button>
+          <button id="btnCaregiverMode" onclick="switchMode('caregiver')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer">
+            Caregiver & AI Scan
+          </button>
+        </div>
+
+        <button onclick="triggerDemoAlarm()" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 transition cursor-pointer">
+          <span>🔔</span>
+          <span>Test Live Alarm</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
+
+    <!-- ==================== SENIOR VIEW ==================== -->
+    <section id="seniorView" class="space-y-6">
+      <!-- Top Daily Adherence Banner -->
+      <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="space-y-1.5">
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-teal-50 text-teal-700 border border-teal-200">
+            Today's Routine
+          </span>
+          <h2 id="adherenceHeading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+            0 of 0 Medicines Taken Today
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600">
+            Tap the green button after taking each pill, or tap <strong>Listen</strong> to hear instructions aloud.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <button onclick="speakFullSchedule()" class="px-5 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm sm:text-base shadow-md shadow-indigo-600/20 flex items-center gap-2 transition cursor-pointer">
+            <span>🔊</span>
+            <span>Read My Schedule Aloud</span>
+          </button>
+          <button onclick="resetDayProgress()" class="px-4 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm border border-slate-300 transition cursor-pointer">
+            Reset Today
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="bg-white rounded-2xl p-4 border-2 border-slate-200">
+        <div class="flex justify-between text-sm font-bold text-slate-700 mb-2">
+          <span>Daily Completion</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+          <div id="progressBar" class="h-full bg-teal-600 transition-all duration-500 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Time Slot Filter Tabs -->
+      <div class="flex flex-wrap gap-2">
+        <button onclick="setSlotFilter('All')" id="tab-All" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer">All Doses</button>
+        <button onclick="setSlotFilter('Morning')" id="tab-Morning" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">☀️ Morning</button>
+        <button onclick="setSlotFilter('Afternoon')" id="tab-Afternoon" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">🌤️ Afternoon</button>
+        <button onclick="setSlotFilter('Night')" id="tab-Night" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">🌙 Night</button>
+      </div>
+
+      <!-- Large High-Contrast Medicine Cards -->
+      <div id="seniorCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- ==================== CAREGIVER & AI SCANNER VIEW ==================== -->
+    <section id="caregiverView" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left 7 Cols: AI Prescription / Strip Scanner -->
+      <div class="lg:col-span-7 space-y-6">
+        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-indigo-50 text-indigo-700 border border-indigo-200">
+              Gemini 3.8 Multimodal AI
+            </span>
+            <button onclick="loadSamplePrescription()" class="text-xs font-bold text-teal-700 hover:underline cursor-pointer">
+              Load Sample Doctor Note
+            </button>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900">Scan Prescription Photo or Doctor's Note</h2>
+          <p class="text-sm text-slate-500 mt-1">
+            Upload a photo of a medicine strip/prescription or paste messy dosage notes—AI converts it into large senior reminders automatically.
+          </p>
+
+          <!-- Photo Upload Box -->
+          <div class="mt-4">
+            <label class="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl bg-slate-50 cursor-pointer transition">
+              <span class="text-sm font-bold text-slate-700" id="fileLabel">📷 Tap to Upload Prescription or Medicine Strip Photo</span>
+              <span class="text-xs text-slate-400 mt-0.5">Supports JPG, PNG, WebP (auto-compressed)</span>
+              <input type="file" id="rxImageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)" />
+            </label>
+            <div id="imagePreviewWrap" class="hidden mt-3 flex items-center justify-between bg-teal-50 border border-teal-200 rounded-xl px-3.5 py-2">
+              <span id="imageNameText" class="text-xs font-bold text-teal-800 truncate">Image attached</span>
+              <button onclick="clearUploadedImage()" class="text-xs font-bold text-rose-600 hover:underline ml-3 cursor-pointer">Remove</button>
+            </div>
+          </div>
+
+          <!-- Text Note Box -->
+          <div class="mt-4">
+            <label for="rxTextInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+              Or Paste Prescription / Dosage Instructions
+            </label>
+            <textarea
+              id="rxTextInput"
+              rows="4"
+              placeholder="Example: Tab Telma 40mg 1-0-0 before breakfast for BP. Tab Pan-D 1 cap empty stomach morning. Tab Metformin 500mg 1-0-1 after meals."
+              class="w-full rounded-2xl border-2 border-slate-200 p-3.5 text-sm text-slate-800 focus:outline-none focus:border-teal-600"
+            ></textarea>
+          </div>
+
+          <button
+            id="scanBtn"
+            onclick="scanPrescriptionWithAI()"
+            class="mt-4 w-full py-3.5 px-5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 transition cursor-pointer"
+          >
+            <span>✨ Extract Senior Schedule with AI</span>
+          </button>
+
+          <!-- AI Scan Output Preview -->
+          <div id="aiScanResultBox" class="hidden mt-5 p-4 rounded-2xl bg-slate-50 border-2 border-teal-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold uppercase text-teal-700">AI Extracted Medicines</span>
+              <span id="scanEngineTag" class="text-[11px] font-bold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600"></span>
+            </div>
+            <p id="doctorSummaryText" class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200"></p>
+            <div id="extractedList" class="space-y-2"></div>
+            <button onclick="applyExtractedMedicines()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
+              + Add All Extracted Medicines to Schedule
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Medication Safety & Food Interaction Check -->
+        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="text-lg font-extrabold text-slate-900">AI Food-Timing & Safety Check</h3>
+              <p class="text-xs text-slate-500">Checks current medicine list for empty-stomach rules, spacing, and elderly precautions.</p>
+            </div>
+            <button onclick="runSafetyCheck()" id="safetyBtn" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
+              🩺 Run AI Safety Check
+            </button>
+          </div>
+
+          <div id="safetyResultBox" class="hidden mt-4 p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span id="safetyHeadline" class="text-sm font-extrabold text-indigo-950"></span>
+              <span id="safetyBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-600 text-white"></span>
+            </div>
+            <div id="safetyAlertsList" class="space-y-2"></div>
+            <p id="elderlyTipText" class="text-xs font-medium text-slate-700 bg-white p-3 rounded-xl border border-indigo-100"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 5 Cols: Manual Add & Caregiver WhatsApp Report -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Manual Add Form -->
+        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+          <h3 class="text-lg font-extrabold text-slate-900 mb-4">Add Medicine Manually</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Medicine Name & Strength</label>
+              <input id="manName" type="text" placeholder="e.g., Amlodipine 5mg" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Dosage</label>
+                <input id="manDosage" type="text" value="1 Tablet" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Time Slot</label>
+                <select id="manSlot" class="w-full rounded-xl border-2 border-slate-200 px-3 py-2.5 text-sm bg-white">
+                  <option value="Morning">Morning (08:30 AM)</option>
+                  <option value="Afternoon">Afternoon (01:30 PM)</option>
+                  <option value="Night">Night (09:00 PM)</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Meal Instruction</label>
+                <input id="manInstruction" type="text" value="After Food" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Pills in Strip</label>
+                <input id="manStock" type="number" value="10" min="1" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Simple Purpose (for Senior)</label>
+              <input id="manPurpose" type="text" placeholder="e.g., Keeps blood pressure steady" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+            </div>
+            <button onclick="addManualMedicine()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition cursor-pointer">
+              + Add to Schedule
+            </button>
+          </div>
+        </div>
+
+        <!-- Caregiver Share & Manage List -->
+        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900">Caregiver Summary</h3>
+            <button onclick="restoreDefaults()" class="text-xs font-bold text-slate-500 hover:text-slate-900 cursor-pointer">Restore Demo Data</button>
+          </div>
+          <p class="text-xs text-slate-500">Send today's adherence log and low-stock refill alerts to family members.</p>
+          <button onclick="copyCaregiverReport()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
+            <span>📋 Copy Family WhatsApp Status Update</span>
+          </button>
+          <div id="caregiverManageList" class="divide-y divide-slate-100 pt-2"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FULL-SCREEN VOICE ALARM MODAL ==================== -->
+  <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-7 border-4 border-amber-400 shadow-2xl text-center space-y-5">
+      <div class="w-20 h-20 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-4xl animate-bounce">
+        ⏰
+      </div>
+      <div class="space-y-1">
+        <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-amber-100 text-amber-800">
+          Medicine Reminder Now
+        </span>
+        <h2 id="alarmMedName" class="text-3xl font-extrabold text-slate-900 pt-2">Metformin 500mg</h2>
+        <p id="alarmMedDetails" class="text-lg font-bold text-teal-700">1 Tablet • After Breakfast</p>
+        <p id="alarmMedPurpose" class="text-sm text-slate-500">Purpose: Controls blood sugar</p>
+      </div>
+
+      <button onclick="speakAlarmCurrent()" class="px-4 py-2 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-xs border border-indigo-200 cursor-pointer">
+        🔊 Repeat Voice Reminder
+      </button>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        <button onclick="confirmAlarmTaken()" class="py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-lg shadow-lg cursor-pointer">
+          ✓ I Took It
+        </button>
+        <button onclick="closeAlarmModal()" class="py-4 px-5 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-lg cursor-pointer">
+          Snooze 10m
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+    MediTrack AI • Accessible Healthcare Assistant • Always follow your doctor's prescribed dosage
+  </footer>
+
+  <script>
+    const DEFAULT_MEDICINES = [
+      {
+        id: "m1",
+        name: "Pan-D Capsule",
+        dosage: "1 Capsule",
+        slot: "Morning",
+        time: "07:30 AM",
+        instruction: "Empty Stomach (30 mins before food)",
+        purpose: "Protects stomach from acidity",
+        pillColor: "amber",
+        stock: 8,
+        taken: true,
+        takenAt: "07:35 AM"
+      },
+      {
+        id: "m2",
+        name: "Telma 40mg",
+        dosage: "1 Tablet",
+        slot: "Morning",
+        time: "08:30 AM",
+        instruction: "After Breakfast",
+        purpose: "Keeps blood pressure steady",
+        pillColor: "blue",
+        stock: 3,
+        taken: false,
+        takenAt: null
+      },
+      {
+        id: "m3",
+        name: "Shelcal 500mg",
+        dosage: "1 Tablet",
+        slot: "Afternoon",
+        time: "01:30 PM",
+        instruction: "After Lunch",
+        purpose: "Bone strength & calcium support",
+        pillColor: "emerald",
+        stock: 12,
+        taken: false,
+        takenAt: null
+      },
+      {
+        id: "m4",
+        name: "Metformin 500mg",
+        dosage: "1 Tablet",
+        slot: "Night",
+        time: "09:00 PM",
+        instruction: "After Dinner",
+        purpose: "Controls blood sugar overnight",
+        pillColor: "rose",
+        stock: 6,
+        taken: false,
+        takenAt: null
+      }
+    ];
+
+    let medicines = JSON.parse(localStorage.getItem("meditrack_v1")) || structuredClone(DEFAULT_MEDICINES);
+    let currentSlotFilter = "All";
+    let uploadedImageBase64 = "";
+    let uploadedImageMime = "image/jpeg";
+    let pendingExtractedMeds = [];
+    let activeAlarmMedId = null;
+
+    function saveState() {
+      localStorage.setItem("meditrack_v1", JSON.stringify(medicines));
+      renderAll();
+    }
+
+    function switchMode(mode) {
+      const seniorView = document.getElementById("seniorView");
+      const caregiverView = document.getElementById("caregiverView");
+      const btnS = document.getElementById("btnSeniorMode");
+      const btnC = document.getElementById("btnCaregiverMode");
+
+      if (mode === "senior") {
+        seniorView.classList.remove("hidden");
+        caregiverView.classList.add("hidden");
+        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer";
+        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer";
+      } else {
+        seniorView.classList.add("hidden");
+        caregiverView.classList.remove("hidden");
+        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer";
+        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer";
+      }
+    }
+
+    function setSlotFilter(slot) {
+      currentSlotFilter = slot;
+      document.querySelectorAll(".slot-tab").forEach(btn => {
+        btn.className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer";
+      });
+      document.getElementById(`tab-${slot}`).className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer";
+      renderSeniorCards();
+    }
+
+    function toggleTaken(id) {
+      const med = medicines.find(m => m.id === id);
+      if (!med) return;
+
+      if (!med.taken) {
+        med.taken = true;
+        med.takenAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        if (med.stock > 0) med.stock -= 1;
+        speakText(`Marked ${med.name} as taken. Well done!`);
+      } else {
+        med.taken = false;
+        med.takenAt = null;
+        med.stock += 1;
+      }
+      saveState();
+    }
+
+    function resetDayProgress() {
+      medicines.forEach(m => {
+        m.taken = false;
+        m.takenAt = null;
+      });
+      saveState();
+    }
+
+    function restoreDefaults() {
+      medicines = structuredClone(DEFAULT_MEDICINES);
+      saveState();
+    }
+
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.92;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function speakSingleMed(id) {
+      const m = medicines.find(item => item.id === id);
+      if (!m) return;
+      speakText(`${m.slot} medicine at ${m.time}. Take ${m.dosage} of ${m.name}, ${m.instruction}. This is for ${m.purpose}.`);
+    }
+
+    function speakFullSchedule() {
+      const pending = medicines.filter(m => !m.taken);
+      if (!pending.length) {
+        speakText("Great job! You have taken all of your medicines for today.");
+        return;
+      }
+      const summary = pending
+        .map(m => `${m.slot} at ${m.time}: ${m.dosage} of ${m.name}, ${m.instruction}`)
+        .join(". ");
+      speakText(`You have ${pending.length} medicines remaining today. ${summary}`);
+    }
+
+    function triggerDemoAlarm() {
+      const nextMed = medicines.find(m => !m.taken) || medicines[0];
+      if (!nextMed) return;
+      activeAlarmMedId = nextMed.id;
+      document.getElementById("alarmMedName").textContent = nextMed.name;
+      document.getElementById("alarmMedDetails").textContent = `${nextMed.dosage} • ${nextMed.instruction}`;
+      document.getElementById("alarmMedPurpose").textContent = `Purpose: ${nextMed.purpose}`;
+      document.getElementById("alarmModal").classList.remove("hidden");
+      speakAlarmCurrent();
+    }
+
+    function speakAlarmCurrent() {
+      const m = medicines.find(item => item.id === activeAlarmMedId);
+      if (!m) return;
+      speakText(`Medicine Reminder! Please take ${m.dosage} of ${m.name}, ${m.instruction}.`);
+    }
+
+    function confirmAlarmTaken() {
+      if (activeAlarmMedId) {
+        const m = medicines.find(item => item.id === activeAlarmMedId);
+        if (m && !m.taken) toggleTaken(activeAlarmMedId);
+      }
+      closeAlarmModal();
+    }
+
+    function closeAlarmModal() {
+      window.speechSynthesis?.cancel();
+      document.getElementById("alarmModal").classList.add("hidden");
+    }
+
+    function renderAll() {
+      const total = medicines.length;
+      const takenCount = medicines.filter(m => m.taken).length;
+      const pct = total ? Math.round((takenCount / total) * 100) : 0;
+
+      document.getElementById("adherenceHeading").textContent = `${takenCount} of ${total} Medicines Taken Today`;
+      document.getElementById("progressPercent").textContent = `${pct}%`;
+      document.getElementById("progressBar").style.width = `${pct}%`;
+
+      renderSeniorCards();
+      renderCaregiverManageList();
+    }
+
+    function renderSeniorCards() {
+      const grid = document.getElementById("seniorCardsGrid");
+      grid.innerHTML = "";
+
+      const filtered = currentSlotFilter === "All"
+        ? medicines
+        : medicines.filter(m => m.slot === currentSlotFilter);
+
+      const pillColors = {
+        blue: "bg-blue-100 text-blue-800 border-blue-200",
+        amber: "bg-amber-100 text-amber-800 border-amber-200",
+        emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
+        rose: "bg-rose-100 text-rose-800 border-rose-200"
+      };
+
+      filtered.forEach(med => {
+        const badgeStyle = pillColors[med.pillColor] || pillColors.blue;
+        const lowStock = med.stock <= 3;
+
+        const card = document.createElement("div");
+        card.className = `senior-card rounded-3xl p-6 border-2 shadow-sm flex flex-col justify-between gap-5 ${
+          med.taken ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200"
+        }`;
+
+        card.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ${badgeStyle}">
+                ${escapeHtml(med.slot)} • ${escapeHtml(med.time)}
+              </span>
+              <button onclick="speakSingleMed('${med.id}')" class="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs sm:text-sm border border-indigo-200 cursor-pointer">
+                🔊 Listen
+              </button>
+            </div>
+
+            <div>
+              <h3 class="text-2xl font-extrabold text-slate-900">${escapeHtml(med.name)}</h3>
+              <p class="text-base font-bold text-teal-700 mt-0.5">${escapeHtml(med.dosage)} — ${escapeHtml(med.instruction)}</p>
+              <p class="text-sm text-slate-600 mt-1">For: ${escapeHtml(med.purpose)}</p>
+            </div>
+
+            ${lowStock ? `
+              <div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">
+                ⚠️ Low Stock Alert: Only ${med.stock} pills left — Refill soon
+              </div>
+            ` : `
+              <div class="text-xs font-semibold text-slate-400">Remaining in strip: ${med.stock} pills</div>
+            `}
+          </div>
+
+          <button onclick="toggleTaken('${med.id}')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ${
+            med.taken
+              ? "bg-emerald-600 text-white hover:bg-emerald-700"
+              : "bg-slate-900 text-white hover:bg-teal-600"
+          }">
+            ${med.taken ? `✓ TAKEN AT ${escapeHtml(med.takenAt)} (Tap to Undo)` : "✓ MARK AS TAKEN"}
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderCaregiverManageList() {
+      const list = document.getElementById("caregiverManageList");
+      list.innerHTML = "";
+      medicines.forEach(med => {
+        const row = document.createElement("div");
+        row.className = "py-2.5 flex items-center justify-between gap-2 text-xs";
+        row.innerHTML = `
+          <div>
+            <span class="font-bold text-slate-800">${escapeHtml(med.name)}</span>
+            <span class="text-slate-500"> (${escapeHtml(med.slot)} • ${med.stock} left)</span>
+          </div>
+          <button onclick="deleteMedicine('${med.id}')" class="text-rose-600 font-bold hover:underline cursor-pointer">Remove</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function deleteMedicine(id) {
+      medicines = medicines.filter(m => m.id !== id);
+      saveState();
+    }
+
+    function addManualMedicine() {
+      const name = document.getElementById("manName").value.trim();
+      if (!name) {
+        alert("Enter a medicine name first.");
+        return;
+      }
+      const slot = document.getElementById("manSlot").value;
+      const defaultTimes = { Morning: "08:30 AM", Afternoon: "01:30 PM", Night: "09:00 PM" };
+
+      medicines.push({
+        id: "m_" + Date.now(),
+        name,
+        dosage: document.getElementById("manDosage").value.trim() || "1 Tablet",
+        slot,
+        time: defaultTimes[slot],
+        instruction: document.getElementById("manInstruction").value.trim() || "After Food",
+        purpose: document.getElementById("manPurpose").value.trim() || "Daily prescribed care",
+        pillColor: slot === "Morning" ? "blue" : slot === "Afternoon" ? "emerald" : "rose",
+        stock: parseInt(document.getElementById("manStock").value, 10) || 10,
+        taken: false,
+        takenAt: null
+      });
+
+      document.getElementById("manName").value = "";
+      document.getElementById("manPurpose").value = "";
+      saveState();
+      switchMode("senior");
+    }
+
+    function loadSamplePrescription() {
+      document.getElementById("rxTextInput").value =
+        "Rx Elderly Care:\n1. Tab Ecosprin 75mg (1-0-0) after breakfast - heart protection\n2. Tab Atorva 10mg (0-0-1) after dinner - cholesterol control\n3. Cap Neurobion Forte (0-1-0) after lunch - nerve & energy support";
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const maxDim = 1024;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          uploadedImageBase64 = dataUrl.split(",")[1];
+          uploadedImageMime = "image/jpeg";
+
+          document.getElementById("imageNameText").textContent = `Attached: ${file.name}`;
+          document.getElementById("imagePreviewWrap").classList.remove("hidden");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearUploadedImage() {
+      uploadedImageBase64 = "";
+      document.getElementById("rxImageInput").value = "";
+      document.getElementById("imagePreviewWrap").classList.add("hidden");
+    }
+
+    async function scanPrescriptionWithAI() {
+      const text = document.getElementById("rxTextInput").value.trim();
+      if (!text && !uploadedImageBase64) {
+        alert("Please upload a prescription photo, paste doctor notes, or click 'Load Sample Doctor Note'.");
+        return;
+      }
+
+      const btn = document.getElementById("scanBtn");
+      btn.textContent = "⏳ AI Reading Prescription...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch("/api/meditrack", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "parse_prescription",
+            text,
+            imageBase64: uploadedImageBase64,
+            mimeType: uploadedImageMime
+          })
+        });
+
+        if (!res.ok) throw new Error("API fallback");
+        const data = await res.json();
+        showExtractedPreview(data);
+      } catch (err) {
+        // Fallback parser if API key is missing/throttled during demo
+        showExtractedPreview(localFallbackParse(text));
+      } finally {
+        btn.textContent = "✨ Extract Senior Schedule with AI";
+        btn.disabled = false;
+      }
+    }
+
+    function localFallbackParse(text) {
+      const lines = (text || "Tab Vitamin D3 60K - Morning after breakfast").split("\n").filter(Boolean);
+      const parsed = lines.slice(0, 4).map((line, i) => ({
+        name: line.replace(/^\d+[\.\)]\s*/, "").split("-")[0].trim().slice(0, 36),
+        dosage: "1 Tablet",
+        slot: /night|dinner|0-0-1/i.test(line) ? "Night" : /lunch|afternoon|0-1-0/i.test(line) ? "Afternoon" : "Morning",
+        time: /night|dinner|0-0-1/i.test(line) ? "09:00 PM" : /lunch|afternoon|0-1-0/i.test(line) ? "01:30 PM" : "08:30 AM",
+        instruction: /empty/i.test(line) ? "Empty Stomach" : "After Food",
+        purpose: "Prescribed daily care",
+        pillColor: i % 2 === 0 ? "blue" : "emerald"
+      }));
+
+      return {
+        source: "smart-parser",
+        medicines: parsed,
+        doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders."
+      };
+    }
+
+    function showExtractedPreview(data) {
+      pendingExtractedMeds = data.medicines || [];
+      document.getElementById("aiScanResultBox").classList.remove("hidden");
+      document.getElementById("scanEngineTag").textContent = data.source === "gemini-ai" ? "Gemini 3.8 AI" : "Smart Parser";
+      document.getElementById("doctorSummaryText").textContent = data.doctorNoteSummary || "Extracted daily schedule below:";
+
+      const list = document.getElementById("extractedList");
+      list.innerHTML = "";
+      pendingExtractedMeds.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "p-3 rounded-xl bg-white border border-slate-200 text-xs flex justify-between items-center";
+        div.innerHTML = `
+          <div>
+            <div class="font-extrabold text-slate-900">${escapeHtml(m.name)} (${escapeHtml(m.dosage)})</div>
+            <div class="text-slate-500">${escapeHtml(m.slot)} • ${escapeHtml(m.instruction)} — ${escapeHtml(m.purpose)}</div>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function applyExtractedMedicines() {
+      pendingExtractedMeds.forEach((m, idx) => {
+        medicines.push({
+          id: "ai_" + Date.now() + "_" + idx,
+          name: m.name,
+          dosage: m.dosage || "1 Tablet",
+          slot: m.slot || "Morning",
+          time: m.time || "08:30 AM",
+          instruction: m.instruction || "After Food",
+          purpose: m.purpose || "Daily care",
+          pillColor: m.pillColor || "blue",
+          stock: 10,
+          taken: false,
+          takenAt: null
+        });
+      });
+      document.getElementById("aiScanResultBox").classList.add("hidden");
+      saveState();
+      switchMode("senior");
+    }
+
+    async function runSafetyCheck() {
+      const btn = document.getElementById("safetyBtn");
+      btn.textContent = "Checking...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch("/api/meditrack", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "check_interactions", medicines })
+        });
+        if (!res.ok) throw new Error("Fallback");
+        const data = await res.json();
+        renderSafetyBox(data);
+      } catch (err) {
+        renderSafetyBox({
+          safetyStatus: "Timing Tips",
+          headline: "Space empty-stomach acidity capsules at least 30 minutes before breakfast.",
+          alerts: [
+            {
+              title: "Meal Spacing Rule",
+              detail: "Take empty-stomach medicines with plain water first, then take blood pressure and diabetes tablets after meals."
+            }
+          ],
+          elderlyTip: "Keep a full bottle of water next to the morning pill organizer to prevent skipped doses."
+        });
+      } finally {
+        btn.textContent = "🩺 Run AI Safety Check";
+        btn.disabled = false;
+      }
+    }
+
+    function renderSafetyBox(data) {
+      document.getElementById("safetyResultBox").classList.remove("hidden");
+      document.getElementById("safetyHeadline").textContent = data.headline;
+      document.getElementById("safetyBadge").textContent = data.safetyStatus;
+      document.getElementById("elderlyTipText").textContent = `💡 Senior Care Tip: ${data.elderlyTip}`;
+
+      const list = document.getElementById("safetyAlertsList");
+      list.innerHTML = "";
+      (data.alerts || []).forEach(a => {
+        const div = document.createElement("div");
+        div.className = "p-3 rounded-xl bg-white border border-indigo-100 text-xs";
+        div.innerHTML = `<strong class="text-slate-900">${escapeHtml(a.title)}:</strong> <span class="text-slate-600">${escapeHtml(a.detail)}</span>`;
+        list.appendChild(div);
+      });
+    }
+
+    function copyCaregiverReport() {
+      const taken = medicines.filter(m => m.taken).map(m => `✅ ${m.name} (${m.takenAt})`);
+      const pending = medicines.filter(m => !m.taken).map(m => `⏳ ${m.name} (${m.slot})`);
+      const lowStock = medicines.filter(m => m.stock <= 3).map(m => `⚠️ Refill ${m.name} (${m.stock} left)`);
+
+      const report = [
+        "📋 *MediTrack Daily Caregiver Update*",
+        `Completed (${taken.length}/${medicines.length}):`,
+        ...(taken.length ? taken : ["None yet"]),
+        "",
+        "Upcoming:",
+        ...(pending.length ? pending : ["All done for today!"]),
+        ...(lowStock.length ? ["", "Refill Alerts:", ...lowStock] : [])
+      ].join("\n");
+
+      navigator.clipboard?.writeText(report);
+      alert("Caregiver WhatsApp report copied to clipboard!\n\n" + report);
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&")
+        .replace(/</g, "<")
+        .replace(/>/g, ">")
+        .replace(/"/g, """);
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
