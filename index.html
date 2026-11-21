@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CarePulse ♥ — Gentle Senior Medicine & Caregiver Companion</title>
+  <title>CarePulse ♥ — Gentle Senior Medicine & Family Care Companion</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,13 +15,17 @@
     }
     .senior-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
     .senior-card:hover { transform: translateY(-2px); }
+    @media print {
+      header, footer, #profileBar, .no-print { display: none !important; }
+      body { background: #ffffff !important; }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
   <!-- Top Accessible Header -->
-  <header class="bg-white/90 border-b-2 border-purple-100 sticky top-0 z-30 shadow-sm backdrop-blur-md">
-    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+  <header class="bg-white/95 border-b-2 border-purple-100 sticky top-0 z-30 shadow-sm backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-600 text-white flex items-center justify-center shadow-md shadow-purple-600/25">
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -30,65 +34,109 @@
         </div>
         <div>
           <h1 class="text-xl font-extrabold tracking-tight text-slate-900">CarePulse <span class="text-purple-600">♥</span></h1>
-          <p class="text-xs font-medium text-purple-700/80">Gentle Medicine Companion & Caregiver Helper</p>
+          <p class="text-xs font-medium text-purple-800/75" id="brandSubtitle">Gentle Medicine & Family Care Companion</p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
+        <!-- Regional Language Switcher -->
+        <div class="bg-purple-50 p-1 rounded-xl border border-purple-200 flex items-center text-xs font-extrabold">
+          <button onclick="setLanguage('en')" id="lang-en" class="px-2.5 py-1.5 rounded-lg bg-purple-700 text-white cursor-pointer">EN</button>
+          <button onclick="setLanguage('hi')" id="lang-hi" class="px-2.5 py-1.5 rounded-lg text-purple-900 hover:bg-purple-100 cursor-pointer">हिन्दी</button>
+          <button onclick="setLanguage('as')" id="lang-as" class="px-2.5 py-1.5 rounded-lg text-purple-900 hover:bg-purple-100 cursor-pointer">অসমীয়া</button>
+        </div>
+
+        <!-- Primary Navigation Tabs -->
         <div class="bg-purple-50 p-1 rounded-xl border border-purple-200/80 flex items-center">
-          <button id="btnSeniorMode" onclick="switchMode('senior')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer">
-            My Medicines (Senior)
+          <button id="btnSeniorMode" onclick="switchMode('senior')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer">
+            My Medicines
           </button>
-          <button id="btnCaregiverMode" onclick="switchMode('caregiver')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-purple-900/70 hover:text-purple-950 transition cursor-pointer">
-            Caregiver & Rx Scan
+          <button id="btnCaregiverMode" onclick="switchMode('caregiver')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-purple-900/75 hover:text-purple-950 transition cursor-pointer">
+            Caregiver & Rx
+          </button>
+          <button id="btnRoadmapMode" onclick="switchMode('roadmap')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-purple-900/75 hover:text-purple-950 transition cursor-pointer">
+            Vitals & Vision
           </button>
         </div>
 
-        <button onclick="triggerDemoAlarm()" class="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 transition cursor-pointer">
+        <!-- No-Login Emergency Card -->
+        <button onclick="openEmergencyModal()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 transition cursor-pointer">
+          <span>♥</span>
+          <span>SOS Card</span>
+        </button>
+
+        <!-- Live Alarm Trigger -->
+        <button onclick="triggerDemoAlarm()" class="px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 transition cursor-pointer">
           <span>🔔</span>
-          <span>Test Live Alarm</span>
+          <span>Live Alarm</span>
         </button>
       </div>
     </div>
   </header>
 
+  <!-- Multi-Senior Family Profile Switcher Bar -->
+  <div id="profileBar" class="bg-white/75 border-b border-purple-100">
+    <div class="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-purple-900/60">Family Care Profile:</span>
+        <div id="profileButtonsWrap" class="flex flex-wrap items-center gap-1.5"></div>
+        <button onclick="addNewFamilyProfile()" class="px-2.5 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs border border-purple-200 cursor-pointer">
+          + Add Elder
+        </button>
+      </div>
+      <div class="text-xs font-semibold text-purple-800/80">
+        ♥ Offline-Ready • Auto-Saved Locally
+      </div>
+    </div>
+  </div>
+
   <!-- Main Container -->
   <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
 
-    <!-- ==================== SENIOR VIEW (MAIN MEDICINE LIST) ==================== -->
+    <!-- ==================== TAB 1: SENIOR VIEW (MAIN MEDICINE LIST) ==================== -->
     <section id="seniorView" class="space-y-6">
       <div class="bg-white/95 rounded-3xl p-6 border-2 border-purple-100 shadow-sm shadow-purple-900/5 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
         <div class="space-y-1.5">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-purple-100 text-purple-800 border border-purple-200">
-            <span>♥</span> Today's Routine
+            <span>♥</span> <span id="lblRoutineTag">Today's Routine</span>
           </span>
           <h2 id="adherenceHeading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
             0 of 0 Medicines Taken Today
           </h2>
-          <p class="text-sm sm:text-base text-slate-600">
+          <p id="lblSubHelp" class="text-sm sm:text-base text-slate-600">
             Tap <strong>+ Add Medicine</strong> to add your own pills, or tap <strong>Listen</strong> to hear instructions aloud.
           </p>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          <button onclick="openAddMedModal()" class="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm sm:text-base shadow-md shadow-purple-600/20 flex items-center gap-2 transition cursor-pointer">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button onclick="openAddMedModal()" class="px-4 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm shadow-md shadow-purple-600/20 flex items-center gap-2 transition cursor-pointer">
             <span class="text-lg leading-none">+</span>
-            <span>Add Medicine</span>
+            <span id="lblAddBtn">Add Medicine</span>
           </button>
-          <button onclick="speakFullSchedule()" class="px-5 py-3.5 rounded-2xl bg-purple-100 hover:bg-purple-200/80 text-purple-900 font-bold text-sm sm:text-base border border-purple-200 flex items-center gap-2 transition cursor-pointer">
+          <button onclick="speakFullSchedule()" class="px-4 py-3.5 rounded-2xl bg-purple-100 hover:bg-purple-200/80 text-purple-950 font-bold text-sm border border-purple-200 flex items-center gap-2 transition cursor-pointer">
             <span>🔊</span>
-            <span>Read Schedule Aloud</span>
+            <span id="lblReadBtn">Read Aloud</span>
           </button>
-          <button onclick="resetDayProgress()" class="px-4 py-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 font-bold text-xs sm:text-sm border border-purple-200 transition cursor-pointer">
-            Reset Today
+          <button onclick="startQuickVoiceLog()" id="quickVoiceBtn" class="px-4 py-3.5 rounded-2xl bg-fuchsia-100 hover:bg-fuchsia-200 text-fuchsia-950 font-bold text-sm border border-fuchsia-200 flex items-center gap-2 transition cursor-pointer">
+            <span>🎤</span>
+            <span id="lblVoiceLogBtn">Say "Taken"</span>
+          </button>
+          <button onclick="resetDayProgress()" class="px-3.5 py-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 font-bold text-xs sm:text-sm border border-purple-200 transition cursor-pointer">
+            Reset
           </button>
         </div>
+      </div>
+
+      <!-- Voice Status Toast -->
+      <div id="voiceFeedbackBanner" class="hidden rounded-2xl p-3.5 bg-purple-900 text-white text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-md">
+        <span id="voiceFeedbackText">🎤 Listening... Say "Taken" or "Dawai le li" to mark your next medicine.</span>
+        <button onclick="stopVoiceRecognition()" class="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-xs cursor-pointer">Stop</button>
       </div>
 
       <!-- Progress Bar -->
       <div class="bg-white/95 rounded-2xl p-4 border-2 border-purple-100 shadow-sm shadow-purple-900/5">
         <div class="flex justify-between text-sm font-bold text-purple-950 mb-2">
-          <span>♥ Daily Care Progress</span>
+          <span id="lblProgressTitle">♥ Daily Care Progress</span>
           <span id="progressPercent" class="text-purple-700">0%</span>
         </div>
         <div class="w-full h-4 bg-purple-100/80 rounded-full overflow-hidden border border-purple-200/70">
@@ -110,7 +158,7 @@
       <div id="seniorCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
     </section>
 
-    <!-- ==================== CAREGIVER & PRESCRIPTION SCANNER VIEW ==================== -->
+    <!-- ==================== TAB 2: CAREGIVER & PRESCRIPTION SCANNER ==================== -->
     <section id="caregiverView" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div class="lg:col-span-7 space-y-6">
         <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm">
@@ -124,7 +172,7 @@
           </div>
           <h2 class="text-xl font-extrabold text-slate-900">Scan Prescription Photo or Doctor's Note</h2>
           <p class="text-sm text-slate-500 mt-1">
-            Upload a photo of a medicine strip or prescription, or paste messy dosage notes to turn them into clear senior reminders automatically.
+            Upload a photo of a handwritten prescription or medicine strip, or paste dosage shorthand (`1-0-1`, `BD`) to create clear senior reminders automatically.
           </p>
 
           <div class="mt-4">
@@ -146,23 +194,23 @@
             <textarea
               id="rxTextInput"
               rows="4"
-              placeholder="Example: Tab Telma 40mg 1-0-0 before breakfast for BP. Tab Pan-D 1 cap empty stomach morning. Tab Metformin 500mg 1-0-1 after meals."
+              placeholder="Example: Tab Thyronorm 50mcg 1-0-0 empty stomach before breakfast. Tab Metformin 500mg 1-0-1 after meals."
               class="w-full rounded-2xl border-2 border-purple-100 p-3.5 text-sm text-slate-800 focus:outline-none focus:border-purple-600"
             ></textarea>
           </div>
 
           <button
             id="scanBtn"
-            onclick="scanPrescriptionWithAI()"
+            onclick="scanPrescriptionWithEngine()"
             class="mt-4 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm shadow-md shadow-purple-600/20 flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <span>♥ Extract Senior Schedule</span>
           </button>
 
-          <div id="aiScanResultBox" class="hidden mt-5 p-4 rounded-2xl bg-purple-50/70 border-2 border-purple-200 space-y-3">
+          <div id="scanResultBox" class="hidden mt-5 p-4 rounded-2xl bg-purple-50/70 border-2 border-purple-200 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold uppercase text-purple-800">Extracted Medicines</span>
-              <span id="scanEngineTag" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white border border-purple-200 text-purple-800"></span>
+              <span id="scanEngineTag" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white border border-purple-200 text-purple-800">♥ CarePulse Reader</span>
             </div>
             <p id="doctorSummaryText" class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-purple-100"></p>
             <div id="extractedList" class="space-y-2"></div>
@@ -176,7 +224,7 @@
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 class="text-lg font-extrabold text-slate-900">♥ Meal-Timing & Safety Check</h3>
-              <p class="text-xs text-slate-500">Reviews current medicine list for empty-stomach rules, spacing, and senior care tips.</p>
+              <p class="text-xs text-slate-500">Reviews active medicine list for empty-stomach rules, spacing, and senior care tips.</p>
             </div>
             <button onclick="runSafetyCheck()" id="safetyBtn" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
               🩺 Run Safety Check
@@ -241,7 +289,7 @@
             <h3 class="text-lg font-extrabold text-slate-900">Complete Medicine List</h3>
             <button onclick="restoreDefaults()" class="text-xs font-bold text-purple-600 hover:text-purple-900 cursor-pointer">Restore Demo Data</button>
           </div>
-          <p class="text-xs text-slate-500">Manage your listed medicines, top up pill counts, or share today's status with family.</p>
+          <p class="text-xs text-slate-500">Top up pill strips, remove discontinued medicines, or copy today's update for family WhatsApp groups.</p>
           <button onclick="copyCaregiverReport()" class="w-full py-3 px-4 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-200 font-bold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
             <span>♥ Copy Family WhatsApp Status Update</span>
           </button>
@@ -249,35 +297,133 @@
         </div>
       </div>
     </section>
+
+    <!-- ==================== TAB 3: VITALS CHECK-IN & FUTURE SCOPE ROADMAP ==================== -->
+    <section id="roadmapView" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Daily Vitals & Wellness Check-In -->
+        <div class="lg:col-span-6 bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-purple-100 text-purple-800">♥ Daily Wellness Check</span>
+              <h2 class="text-xl font-extrabold text-slate-900 mt-2">Vitals & Post-Dose Symptom Log</h2>
+            </div>
+            <button onclick="exportDoctorReport()" class="px-3.5 py-2 rounded-xl bg-purple-900 hover:bg-purple-950 text-white font-bold text-xs cursor-pointer">
+              📄 Doctor Visit Summary
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Blood Pressure (mmHg)</label>
+              <input id="vitalBp" type="text" placeholder="e.g., 124/80" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-semibold focus:outline-none focus:border-purple-600" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Blood Sugar (mg/dL)</label>
+              <input id="vitalSugar" type="text" placeholder="e.g., 112" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-semibold focus:outline-none focus:border-purple-600" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">How is the senior feeling right now?</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button type="button" onclick="selectMood('Feeling Good 😊')" class="mood-btn p-2.5 rounded-xl border-2 border-purple-600 bg-purple-50 text-xs font-extrabold text-purple-950 cursor-pointer">😊 Good</button>
+              <button type="button" onclick="selectMood('Mild Dizziness 💫')" class="mood-btn p-2.5 rounded-xl border-2 border-purple-100 bg-white text-xs font-bold text-slate-700 cursor-pointer">💫 Dizzy</button>
+              <button type="button" onclick="selectMood('Acidity 🔥')" class="mood-btn p-2.5 rounded-xl border-2 border-purple-100 bg-white text-xs font-bold text-slate-700 cursor-pointer">🔥 Acidity</button>
+              <button type="button" onclick="selectMood('Fatigue 😴')" class="mood-btn p-2.5 rounded-xl border-2 border-purple-100 bg-white text-xs font-bold text-slate-700 cursor-pointer">😴 Tired</button>
+            </div>
+          </div>
+
+          <button onclick="logVitalsEntry()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm shadow-sm cursor-pointer">
+            ♥ Save Today's Vitals Check-In
+          </button>
+
+          <div class="pt-2">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-purple-900/60 mb-2">Recent Wellness Logs</h3>
+            <div id="vitalsHistoryList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+          </div>
+        </div>
+
+        <!-- CarePulse Ecosystem & Future Scope Roadmap -->
+        <div class="lg:col-span-6 bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm space-y-4">
+          <div>
+            <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-fuchsia-100 text-fuchsia-900">♥ Product Vision & Scale</span>
+            <h2 class="text-xl font-extrabold text-slate-900 mt-2">CarePulse Connected Care Ecosystem</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Designed to scale across Indian households, clinics, and low-connectivity regions.</p>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Pillar 1: WhatsApp Escalation -->
+            <div class="p-4 rounded-2xl bg-purple-50/70 border border-purple-200 space-y-2">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-sm font-extrabold text-purple-950">1. WhatsApp Alerts & 30-Min Caregiver Escalation</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-700 text-white">Interactive Demo</span>
+              </div>
+              <p class="text-xs text-slate-600">If a critical BP or diabetes dose goes unconfirmed for 30 minutes, CarePulse triggers an automated family WhatsApp alert and caregiver voice call.</p>
+              <button onclick="simulateEscalationAlert()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-purple-100 text-purple-900 font-bold text-xs border border-purple-300 cursor-pointer">
+                ▶ Preview 30-Min Missed Dose Escalation
+              </button>
+            </div>
+
+            <!-- Pillar 2: ABHA / ABDM Sync -->
+            <div class="p-4 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-sm font-extrabold text-purple-950">2. ABHA / Ayushman Bharat Digital Mission Sync</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">Healthcare API Ready</span>
+              </div>
+              <p class="text-xs text-slate-600">One-tap prescription import directly from ABDM-verified hospital records using a senior's 14-digit ABHA health ID—eliminating manual entry.</p>
+            </div>
+
+            <!-- Pillar 3: Multi-Senior Family Profiles -->
+            <div class="p-4 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-sm font-extrabold text-purple-950">3. Multi-Senior Household Profiles</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200">♥ Active in Top Bar</span>
+              </div>
+              <p class="text-xs text-slate-600">Manage schedules, pill strip stocks, and SOS cards for both parents and grandparents from a single caregiver device.</p>
+            </div>
+
+            <!-- Pillar 4: Offline-First PWA -->
+            <div class="p-4 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-1">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-sm font-extrabold text-purple-950">4. Offline-First PWA & Low-Data Resilience</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200">♥ Local-First Storage</span>
+              </div>
+              <p class="text-xs text-slate-600">Schedules, pill photos, and spoken voice reminders run directly on-device so elders never miss a dose during power cuts or weak mobile signals.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- ==================== ADD NEW MEDICINE MODAL (USER SELF-SERVICE) ==================== -->
-  <div id="addMedModal" class="hidden fixed inset-0 z-50 bg-purple-950/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 border-2 border-purple-200 shadow-2xl space-y-4">
+  <!-- ==================== MODAL 1: ADD YOUR OWN MEDICINE (WITH PILL PHOTO) ==================== -->
+  <div id="addMedModal" class="hidden fixed inset-0 z-50 bg-purple-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 border-2 border-purple-200 shadow-2xl space-y-4 my-auto">
       <div class="flex items-center justify-between border-b border-purple-100 pb-3">
         <div>
           <h2 class="text-xl font-extrabold text-slate-900">♥ Add Your Own Medicine</h2>
-          <p class="text-xs text-slate-500">Enter medicine details below to add it to your daily list.</p>
+          <p class="text-xs text-slate-500">Add medicine details and an optional pill photo for easy visual matching.</p>
         </div>
         <button onclick="closeAddMedModal()" class="w-9 h-9 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-900 font-extrabold text-lg cursor-pointer">
           ✕
         </button>
       </div>
 
-      <div class="space-y-3.5">
+      <div class="space-y-3">
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Medicine Name & Strength *</label>
-          <input id="modalMedName" type="text" placeholder="e.g., Paracetamol 650mg or Vitamin D3" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-3 text-base font-medium focus:outline-none focus:border-purple-600" />
+          <input id="modalMedName" type="text" placeholder="e.g., Paracetamol 650mg or Vitamin D3" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-base font-medium focus:outline-none focus:border-purple-600" />
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Dosage</label>
-            <input id="modalMedDosage" type="text" value="1 Tablet" placeholder="e.g., 1 Tablet or 5 ml" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+            <input id="modalMedDosage" type="text" value="1 Tablet" placeholder="e.g., 1 Tablet or 5 ml" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-purple-600" />
           </div>
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Time of Day</label>
-            <select id="modalMedSlot" onchange="syncModalSlotTime()" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-bold bg-white focus:outline-none focus:border-purple-600">
+            <select id="modalMedSlot" onchange="syncModalSlotTime()" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2 text-sm font-bold bg-white focus:outline-none focus:border-purple-600">
               <option value="Morning">☀️ Morning</option>
               <option value="Afternoon">🌤️ Afternoon</option>
               <option value="Night">🌙 Night</option>
@@ -285,20 +431,20 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Reminder Time</label>
-            <input id="modalMedTime" type="text" value="08:30 AM" placeholder="e.g., 08:30 AM" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+            <input id="modalMedTime" type="text" value="08:30 AM" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-purple-600" />
           </div>
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Pills Available</label>
-            <input id="modalMedStock" type="number" value="10" min="1" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+            <input id="modalMedStock" type="number" value="10" min="1" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-purple-600" />
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Food / Meal Instruction</label>
-          <input id="modalMedInstruction" list="mealOptions" value="After Food" placeholder="e.g., After Breakfast or Empty Stomach" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+          <input id="modalMedInstruction" list="mealOptions" value="After Food" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-purple-600" />
           <datalist id="mealOptions">
             <option value="Empty Stomach (30 mins before food)">
             <option value="After Breakfast">
@@ -310,7 +456,17 @@
 
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">What is this medicine for?</label>
-          <input id="modalMedPurpose" type="text" placeholder="e.g., Fever relief, Blood pressure, Calcium" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+          <input id="modalMedPurpose" type="text" placeholder="e.g., Fever relief, Blood pressure, Calcium" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-purple-600" />
+        </div>
+
+        <!-- Optional Pill / Strip Photo Attachment -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Pill or Strip Photo (Helps Seniors Match Tablet)</label>
+          <label class="flex items-center justify-between px-3.5 py-2.5 rounded-xl border-2 border-dashed border-purple-200 hover:border-purple-500 bg-purple-50/50 cursor-pointer text-xs font-bold text-purple-900">
+            <span id="pillPhotoLabel">📷 Attach Tablet / Strip Photo (Optional)</span>
+            <span class="text-purple-600 underline">Choose</span>
+            <input type="file" id="pillPhotoInput" accept="image/*" class="hidden" onchange="handlePillPhotoSelect(event)" />
+          </label>
         </div>
       </div>
 
@@ -325,26 +481,89 @@
     </div>
   </div>
 
-  <!-- ==================== FULL-SCREEN VOICE ALARM MODAL ==================== -->
-  <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-purple-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-7 border-4 border-purple-400 shadow-2xl text-center space-y-5">
-      <div class="w-20 h-20 mx-auto rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-4xl animate-bounce">
+  <!-- ==================== MODAL 2: NO-LOGIN EMERGENCY HEALTH CARD (SOS) ==================== -->
+  <div id="emergencyModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full overflow-hidden border-4 border-rose-500 shadow-2xl my-auto">
+      <div class="bg-gradient-to-r from-rose-600 to-purple-700 p-5 text-white flex items-center justify-between">
+        <div>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest bg-white/20 px-2.5 py-0.5 rounded-full">No-Login Emergency Medical ID</span>
+          <h2 id="sosPatientTitle" class="text-2xl font-extrabold mt-1">Ramesh Borah (Age 72)</h2>
+        </div>
+        <button onclick="closeEmergencyModal()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white font-extrabold text-lg cursor-pointer">✕</button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="p-3 rounded-2xl bg-rose-50 border border-rose-200">
+            <div class="text-[11px] font-extrabold uppercase text-rose-700">Blood Group</div>
+            <div id="sosBlood" class="text-xl font-extrabold text-slate-900">O+ Positive</div>
+          </div>
+          <div class="p-3 rounded-2xl bg-purple-50 border border-purple-200">
+            <div class="text-[11px] font-extrabold uppercase text-purple-700">Emergency Contact</div>
+            <div id="sosContactName" class="text-sm font-extrabold text-slate-900">Abhinab (Son)</div>
+            <a id="sosContactPhone" href="tel:+919876543210" class="text-xs font-extrabold text-purple-700 underline">+91 98765 43210</a>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
+          <div class="text-xs font-extrabold uppercase text-amber-800">Known Allergies & Conditions</div>
+          <p id="sosConditions" class="text-sm font-bold text-slate-900 mt-1">Hypertension (High BP), Type-2 Diabetes • Allergic to Penicillin</p>
+        </div>
+
+        <div>
+          <div class="text-xs font-extrabold uppercase text-slate-500 mb-1.5">Active Daily Medications (Auto-Synced)</div>
+          <div id="sosActiveMeds" class="space-y-1.5 max-h-36 overflow-y-auto"></div>
+        </div>
+
+        <!-- Quick Caregiver Edit Form -->
+        <div id="sosEditForm" class="hidden pt-3 border-t border-slate-200 space-y-2.5">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="editSosBlood" type="text" placeholder="Blood Group" class="rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold" />
+            <input id="editSosPhone" type="text" placeholder="Emergency Phone" class="rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold" />
+          </div>
+          <input id="editSosConditions" type="text" placeholder="Allergies & Chronic Conditions" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold" />
+          <button onclick="saveEmergencyInfo()" class="w-full py-2.5 rounded-xl bg-purple-700 text-white font-bold text-xs cursor-pointer">Save Emergency Card</button>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <button onclick="toggleSosEdit()" class="text-xs font-bold text-purple-700 hover:underline cursor-pointer">✎ Edit Emergency Details</button>
+          <button onclick="closeEmergencyModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs cursor-pointer">Close Card</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: FULL-SCREEN VOICE ALARM (WITH HANDS-FREE MIC) ==================== -->
+  <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-purple-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-7 border-4 border-purple-400 shadow-2xl text-center space-y-4">
+      <div id="alarmVisualWrap" class="w-20 h-20 mx-auto rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-4xl overflow-hidden border-2 border-purple-200">
         ♥
       </div>
       <div class="space-y-1">
         <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-purple-100 text-purple-800">
-          Medicine Reminder Now
+          Gentle Medicine Reminder
         </span>
-        <h2 id="alarmMedName" class="text-3xl font-extrabold text-slate-900 pt-2">Metformin 500mg</h2>
+        <h2 id="alarmMedName" class="text-3xl font-extrabold text-slate-900 pt-1">Telma 40mg</h2>
         <p id="alarmMedDetails" class="text-lg font-bold text-purple-700">1 Tablet • After Breakfast</p>
-        <p id="alarmMedPurpose" class="text-sm text-slate-500">Purpose: Controls blood sugar</p>
+        <p id="alarmMedPurpose" class="text-sm text-slate-500">Purpose: Keeps blood pressure steady</p>
       </div>
 
-      <button onclick="speakAlarmCurrent()" class="px-4 py-2 rounded-xl bg-purple-50 text-purple-800 font-bold text-xs border border-purple-200 cursor-pointer">
-        🔊 Repeat Voice Reminder
-      </button>
+      <!-- Hands-Free Voice Confirmation Box -->
+      <div class="p-3 rounded-2xl bg-purple-50 border border-purple-200 space-y-1.5">
+        <div id="alarmVoiceStatus" class="text-xs font-extrabold text-purple-900">
+          🎤 Hands-Free Ready: Say "Taken" or "Dawai le li"
+        </div>
+        <div class="flex justify-center gap-2">
+          <button onclick="speakAlarmCurrent()" class="px-3 py-1.5 rounded-xl bg-white text-purple-800 font-bold text-xs border border-purple-200 cursor-pointer">
+            🔊 Repeat Voice
+          </button>
+          <button onclick="listenForAlarmConfirmation()" class="px-3 py-1.5 rounded-xl bg-fuchsia-600 text-white font-bold text-xs cursor-pointer">
+            🎤 Listen Now
+          </button>
+        </div>
+      </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
         <button onclick="confirmAlarmTaken()" class="py-4 px-5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-lg shadow-lg cursor-pointer">
           ♥ I Took It
         </button>
@@ -356,58 +575,163 @@
   </div>
 
   <footer class="bg-white/90 border-t border-purple-100 py-4 text-center text-xs text-purple-900/70">
-    CarePulse <span class="text-purple-600 font-bold">♥</span> • Gentle Healthcare Companion • Always follow your doctor's prescribed dosage
+    CarePulse <span class="text-purple-600 font-bold">♥</span> • Gentle Senior Healthcare Companion • Always follow your doctor's prescribed dosage
   </footer>
 
   <script>
-    const DEFAULT_MEDICINES = [
-      { id: "m1", name: "Pan-D Capsule", dosage: "1 Capsule", slot: "Morning", time: "07:30 AM", instruction: "Empty Stomach (30 mins before food)", purpose: "Protects stomach from acidity", pillColor: "amber", stock: 8, taken: true, takenAt: "07:35 AM" },
-      { id: "m2", name: "Telma 40mg", dosage: "1 Tablet", slot: "Morning", time: "08:30 AM", instruction: "After Breakfast", purpose: "Keeps blood pressure steady", pillColor: "purple", stock: 3, taken: false, takenAt: null },
-      { id: "m3", name: "Shelcal 500mg", dosage: "1 Tablet", slot: "Afternoon", time: "01:30 PM", instruction: "After Lunch", purpose: "Bone strength & calcium support", pillColor: "fuchsia", stock: 12, taken: false, takenAt: null },
-      { id: "m4", name: "Metformin 500mg", dosage: "1 Tablet", slot: "Night", time: "09:00 PM", instruction: "After Dinner", purpose: "Controls blood sugar overnight", pillColor: "violet", stock: 6, taken: false, takenAt: null }
-    ];
+    const I18N = {
+      en: {
+        subtitle: "Gentle Medicine & Family Care Companion",
+        routineTag: "Today's Routine",
+        subHelp: "Tap + Add Medicine to add your own pills, or tap Listen to hear instructions aloud.",
+        addBtn: "Add Medicine",
+        readBtn: "Read Aloud",
+        voiceLogBtn: "Say \"Taken\"",
+        progressTitle: "♥ Daily Care Progress",
+        takenProgress: "{t} of {n} Medicines Taken Today",
+        markTaken: "♥ MARK AS TAKEN",
+        takenAt: "♥ TAKEN AT {time} (Tap to Undo)",
+        listen: "🔊 Listen",
+        slots: { Morning: "Morning", Afternoon: "Afternoon", Night: "Night" }
+      },
+      hi: {
+        subtitle: "बुजुर्गों की दवा और परिवार देखभाल साथी",
+        routineTag: "आज की दवाइयाँ",
+        subHelp: "नई दवा जोड़ने के लिए '+ दवा जोड़ें' दबाएं या निर्देश सुनने के लिए 'सुनें' दबाएं।",
+        addBtn: "दवा जोड़ें",
+        readBtn: "बोलकर सुनाएं",
+        voiceLogBtn: "\"दवाई ले ली\" बोलें",
+        progressTitle: "♥ आज की देखभाल प्रगति",
+        takenProgress: "आज {n} में से {t} दवाइयाँ ली गईं",
+        markTaken: "♥ दवाई ले ली (निशान लगाएं)",
+        takenAt: "♥ {time} पर ली गई (बदलें)",
+        listen: "🔊 सुनें",
+        slots: { Morning: "सुबह", Afternoon: "दोपहर", Night: "रात" }
+      },
+      as: {
+        subtitle: "জ্যেষ্ঠজনৰ ঔষধ আৰু পৰিয়ালৰ যত্নৰ সংগী",
+        routineTag: "আজিৰ ঔষধৰ তালিকা",
+        subHelp: "নতুন ঔষধ যোগ দিবলৈ '+ ঔষধ যোগ' টিপক বা শুনিবলৈ 'শুনক' বুটাম টিপক।",
+        addBtn: "ঔষধ যোগ",
+        readBtn: "পঢ়ি শুনাওক",
+        voiceLogBtn: "\"খালোঁ\" বুলি কওক",
+        progressTitle: "♥ আজিৰ যত্নৰ অগ্ৰগতি",
+        takenProgress: "আজি {n} টা ঔষধৰ ভিতৰত {t} টা খোৱা হৈছে",
+        markTaken: "♥ ঔষধ খালোঁ",
+        takenAt: "♥ {time} বজাত খোৱা হৈছে",
+        listen: "🔊 শুনক",
+        slots: { Morning: "ৰাতিপুৱা", Afternoon: "দুপৰীয়া", Night: "ৰাতি" }
+      }
+    };
 
-    let medicines;
+    const DEFAULT_STATE = {
+      lang: "en",
+      activeProfileId: "p1",
+      profiles: [
+        {
+          id: "p1",
+          label: "👴 Dada (Ramesh, 72)",
+          fullName: "Ramesh Borah (Age 72)",
+          bloodGroup: "O+ Positive",
+          contactName: "Abhinab (Son)",
+          contactPhone: "+91 98765 43210",
+          conditions: "Hypertension (High BP), Type-2 Diabetes • Allergic to Penicillin",
+          medicines: [
+            { id: "m1", name: "Pan-D Capsule", dosage: "1 Capsule", slot: "Morning", time: "07:30 AM", instruction: "Empty Stomach (30 mins before food)", purpose: "Protects stomach from acidity", pillColor: "amber", stock: 8, taken: true, takenAt: "07:35 AM", photo: "" },
+            { id: "m2", name: "Telma 40mg", dosage: "1 Tablet", slot: "Morning", time: "08:30 AM", instruction: "After Breakfast", purpose: "Keeps blood pressure steady", pillColor: "purple", stock: 3, taken: false, takenAt: null, photo: "" },
+            { id: "m3", name: "Shelcal 500mg", dosage: "1 Tablet", slot: "Afternoon", time: "01:30 PM", instruction: "After Lunch", purpose: "Bone strength & calcium support", pillColor: "fuchsia", stock: 12, taken: false, takenAt: null, photo: "" },
+            { id: "m4", name: "Metformin 500mg", dosage: "1 Tablet", slot: "Night", time: "09:00 PM", instruction: "After Dinner", purpose: "Controls blood sugar overnight", pillColor: "violet", stock: 6, taken: false, takenAt: null, photo: "" }
+          ],
+          vitals: [
+            { time: "Today, 08:15 AM", bp: "126/82", sugar: "114 mg/dL", mood: "Feeling Good 😊" }
+          ]
+        },
+        {
+          id: "p2",
+          label: "👵 Dadi (Sunita, 68)",
+          fullName: "Sunita Borah (Age 68)",
+          bloodGroup: "B+ Positive",
+          contactName: "Abhinab (Son)",
+          contactPhone: "+91 98765 43210",
+          conditions: "Hypothyroidism, Osteoarthritis • No known drug allergies",
+          medicines: [
+            { id: "s1", name: "Thyronorm 50mcg", dosage: "1 Tablet", slot: "Morning", time: "07:00 AM", instruction: "Empty Stomach (45 mins before tea)", purpose: "Thyroid hormone balance", pillColor: "purple", stock: 14, taken: true, takenAt: "07:05 AM", photo: "" },
+            { id: "s2", name: "Vitamin D3 60K", dosage: "1 Softgel", slot: "Afternoon", time: "01:30 PM", instruction: "After Lunch (Weekly)", purpose: "Joint & bone health", pillColor: "amber", stock: 4, taken: false, takenAt: null, photo: "" }
+          ],
+          vitals: [
+            { time: "Today, 08:00 AM", bp: "120/78", sugar: "102 mg/dL", mood: "Feeling Good 😊" }
+          ]
+        }
+      ]
+    };
+
+    let appState;
     try {
-      const saved = JSON.parse(localStorage.getItem("carepulse_v1"));
-      medicines = Array.isArray(saved) ? saved : JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
+      const saved = JSON.parse(localStorage.getItem("carepulse_v2"));
+      appState = saved && Array.isArray(saved.profiles) && saved.profiles.length ? saved : JSON.parse(JSON.stringify(DEFAULT_STATE));
     } catch (e) {
-      medicines = JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
+      appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
     }
 
     let currentSlotFilter = "All";
     let uploadedImageBase64 = "";
     let uploadedImageMime = "image/jpeg";
+    let modalPillPhotoBase64 = "";
     let pendingExtractedMeds = [];
     let activeAlarmMedId = null;
+    let selectedMood = "Feeling Good 😊";
     let cachedFemaleVoice = null;
+    let activeRecognition = null;
+
+    function getActiveProfile() {
+      return appState.profiles.find(p => p.id === appState.activeProfileId) || appState.profiles[0];
+    }
+
+    function saveState() {
+      localStorage.setItem("carepulse_v2", JSON.stringify(appState));
+      renderAll();
+    }
+
+    function setLanguage(lang) {
+      appState.lang = lang;
+      ["en", "hi", "as"].forEach(code => {
+        const btn = document.getElementById("lang-" + code);
+        btn.className = code === lang
+          ? "px-2.5 py-1.5 rounded-lg bg-purple-700 text-white cursor-pointer"
+          : "px-2.5 py-1.5 rounded-lg text-purple-900 hover:bg-purple-100 cursor-pointer";
+      });
+      cachedFemaleVoice = null;
+      selectFemaleVoice();
+      saveState();
+    }
 
     function selectFemaleVoice() {
       if (!("speechSynthesis" in window)) return null;
       const voices = window.speechSynthesis.getVoices();
       if (!voices || !voices.length) return null;
 
+      const langPrefix = appState.lang === "hi" ? "hi" : "en";
       const preferredNames = [
-        "samantha", "ava", "allison", "susan", "karen", "moira", "tessa",
-        "veena", "aria", "jenny", "sonia", "natasha", "libby", "claire",
-        "google uk english female", "google us english", "microsoft zira",
-        "microsoft aria", "microsoft jenny", "female", "woman"
+        "lekha", "swara", "heera", "veena", "samantha", "ava", "allison",
+        "susan", "karen", "moira", "tessa", "aria", "jenny", "sonia",
+        "google uk english female", "google हिन्दी", "microsoft zira", "female"
       ];
-      const maleNames = ["daniel", "alex", "fred", "rishi", "ravi", "david", "mark", "thomas", "male", "man"];
+      const maleNames = ["daniel", "alex", "fred", "rishi", "ravi", "david", "mark", "thomas", "madhur", "male"];
 
       for (const target of preferredNames) {
-        const match = voices.find(v => v.name.toLowerCase().includes(target) && v.lang.toLowerCase().startsWith("en"));
+        const match = voices.find(v => v.name.toLowerCase().includes(target) && v.lang.toLowerCase().startsWith(langPrefix));
         if (match) {
           cachedFemaleVoice = match;
           return match;
         }
       }
 
-      const fallbackEn = voices.find(v =>
-        v.lang.toLowerCase().startsWith("en") &&
+      const fallback = voices.find(v =>
+        v.lang.toLowerCase().startsWith(langPrefix) &&
         !maleNames.some(m => v.name.toLowerCase().includes(m))
-      );
-      cachedFemaleVoice = fallbackEn || voices[0];
+      ) || voices.find(v => v.lang.toLowerCase().startsWith("en") && !maleNames.some(m => v.name.toLowerCase().includes(m)));
+
+      cachedFemaleVoice = fallback || voices[0];
       return cachedFemaleVoice;
     }
 
@@ -416,31 +740,172 @@
       window.speechSynthesis.onvoiceschanged = selectFemaleVoice;
     }
 
-    function saveState() {
-      localStorage.setItem("carepulse_v1", JSON.stringify(medicines));
-      renderAll();
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      const voice = cachedFemaleVoice || selectFemaleVoice();
+      if (voice) utterance.voice = voice;
+      utterance.rate = 0.94;
+      utterance.pitch = 1.08;
+      window.speechSynthesis.speak(utterance);
     }
 
     function switchMode(mode) {
-      const seniorView = document.getElementById("seniorView");
-      const caregiverView = document.getElementById("caregiverView");
-      const btnS = document.getElementById("btnSeniorMode");
-      const btnC = document.getElementById("btnCaregiverMode");
+      const views = {
+        senior: document.getElementById("seniorView"),
+        caregiver: document.getElementById("caregiverView"),
+        roadmap: document.getElementById("roadmapView")
+      };
+      const btns = {
+        senior: document.getElementById("btnSeniorMode"),
+        caregiver: document.getElementById("btnCaregiverMode"),
+        roadmap: document.getElementById("btnRoadmapMode")
+      };
 
-      if (mode === "senior") {
-        seniorView.classList.remove("hidden");
-        caregiverView.classList.add("hidden");
-        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer";
-        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-purple-900/70 hover:text-purple-950 transition cursor-pointer";
-      } else {
-        seniorView.classList.add("hidden");
-        caregiverView.classList.remove("hidden");
-        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer";
-        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-purple-900/70 hover:text-purple-950 transition cursor-pointer";
+      Object.keys(views).forEach(key => {
+        if (key === mode) {
+          views[key].classList.remove("hidden");
+          btns[key].className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer";
+        } else {
+          views[key].classList.add("hidden");
+          btns[key].className = "px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold text-purple-900/75 hover:text-purple-950 transition cursor-pointer";
+        }
+      });
+    }
+
+    function switchProfile(id) {
+      appState.activeProfileId = id;
+      saveState();
+    }
+
+    function addNewFamilyProfile() {
+      const name = prompt("Enter Elder's Name & Age (e.g., Nana — Prakash, 75):");
+      if (!name || !name.trim()) return;
+      const newId = "p_" + Date.now();
+      appState.profiles.push({
+        id: newId,
+        label: "♥ " + name.trim(),
+        fullName: name.trim(),
+        bloodGroup: "Not Set",
+        contactName: "Family Caregiver",
+        contactPhone: "+91 98765 43210",
+        conditions: "No chronic conditions entered yet",
+        medicines: [],
+        vitals: []
+      });
+      appState.activeProfileId = newId;
+      saveState();
+    }
+
+    function renderProfileBar() {
+      const wrap = document.getElementById("profileButtonsWrap");
+      wrap.innerHTML = "";
+      appState.profiles.forEach(prof => {
+        const active = prof.id === appState.activeProfileId;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.onclick = () => switchProfile(prof.id);
+        btn.className = active
+          ? "px-3 py-1 rounded-lg bg-purple-700 text-white font-extrabold text-xs shadow-sm cursor-pointer"
+          : "px-3 py-1 rounded-lg bg-white text-purple-950 font-bold text-xs border border-purple-200 hover:bg-purple-50 cursor-pointer";
+        btn.textContent = prof.label;
+        wrap.appendChild(btn);
+      });
+    }
+
+    /* ==================== HANDS-FREE VOICE RECOGNITION ==================== */
+    function startQuickVoiceLog() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        alert("Voice recognition is not supported in this browser. Tap '♥ MARK AS TAKEN' on your medicine card instead.");
+        return;
+      }
+      stopVoiceRecognition();
+      const banner = document.getElementById("voiceFeedbackBanner");
+      const statusText = document.getElementById("voiceFeedbackText");
+      banner.classList.remove("hidden");
+      statusText.textContent = "🎤 Listening... Say \"Taken\", \"Done\", or \"Dawai le li\" now.";
+
+      try {
+        const rec = new SpeechRec();
+        activeRecognition = rec;
+        rec.lang = appState.lang === "hi" ? "hi-IN" : "en-IN";
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
+
+        rec.onresult = function (event) {
+          const spoken = (event.results[0][0].transcript || "").toLowerCase();
+          if (/taken|done|yes|ok|dawai|le li|kha liya|khalu|khalo/i.test(spoken)) {
+            const prof = getActiveProfile();
+            const nextMed = prof.medicines.find(m => !m.taken);
+            if (nextMed) {
+              toggleTaken(nextMed.id);
+              statusText.textContent = "♥ Heard \"" + spoken + "\" — Marked " + nextMed.name + " as taken!";
+            } else {
+              statusText.textContent = "♥ All medicines are already marked taken for today!";
+            }
+          } else {
+            statusText.textContent = "Heard \"" + spoken + "\". Say \"Taken\" or \"Dawai le li\" to log your dose.";
+          }
+          setTimeout(() => banner.classList.add("hidden"), 3500);
+        };
+
+        rec.onerror = function () {
+          statusText.textContent = "Microphone unavailable or blocked. Tap the purple button on your medicine card.";
+          setTimeout(() => banner.classList.add("hidden"), 3000);
+        };
+
+        rec.start();
+      } catch (err) {
+        banner.classList.add("hidden");
       }
     }
 
+    function listenForAlarmConfirmation() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const statusEl = document.getElementById("alarmVoiceStatus");
+      if (!SpeechRec) {
+        statusEl.textContent = "Voice mic unavailable here — tap '♥ I Took It' below.";
+        return;
+      }
+      stopVoiceRecognition();
+      statusEl.textContent = "🎤 Listening... Speak \"Taken\" or \"Dawai le li\" now...";
+
+      try {
+        const rec = new SpeechRec();
+        activeRecognition = rec;
+        rec.lang = appState.lang === "hi" ? "hi-IN" : "en-IN";
+        rec.onresult = function (event) {
+          const spoken = (event.results[0][0].transcript || "").toLowerCase();
+          if (/taken|done|yes|dawai|le li|kha liya|khalu/i.test(spoken)) {
+            statusEl.textContent = "♥ Confirmed by voice (\"" + spoken + "\")!";
+            setTimeout(confirmAlarmTaken, 600);
+          } else {
+            statusEl.textContent = "Heard \"" + spoken + "\". Say \"Taken\" or tap button below.";
+          }
+        };
+        rec.onerror = function () {
+          statusEl.textContent = "Tap '♥ I Took It' below to confirm your dose.";
+        };
+        rec.start();
+      } catch (e) {
+        statusEl.textContent = "Tap '♥ I Took It' below to confirm your dose.";
+      }
+    }
+
+    function stopVoiceRecognition() {
+      if (activeRecognition) {
+        try { activeRecognition.stop(); } catch (e) {}
+        activeRecognition = null;
+      }
+      document.getElementById("voiceFeedbackBanner").classList.add("hidden");
+    }
+
+    /* ==================== ADD MEDICINE MODAL + PILL PHOTO ==================== */
     function openAddMedModal() {
+      modalPillPhotoBase64 = "";
+      document.getElementById("pillPhotoLabel").textContent = "📷 Attach Tablet / Strip Photo (Optional)";
       document.getElementById("addMedModal").classList.remove("hidden");
       setTimeout(() => document.getElementById("modalMedName").focus(), 50);
     }
@@ -455,15 +920,43 @@
       document.getElementById("modalMedTime").value = defaultTimes[slot] || "08:30 AM";
     }
 
+    function handlePillPhotoSelect(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const maxDim = 320;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          modalPillPhotoBase64 = canvas.toDataURL("image/jpeg", 0.78);
+          document.getElementById("pillPhotoLabel").textContent = "♥ Photo Ready: " + file.name;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     function saveModalMedicine() {
       const name = document.getElementById("modalMedName").value.trim();
       if (!name) {
         alert("Please enter the medicine name first.");
         return;
       }
+      const prof = getActiveProfile();
       const slot = document.getElementById("modalMedSlot").value;
       const defaultTimes = { Morning: "08:30 AM", Afternoon: "01:30 PM", Night: "09:00 PM" };
-      medicines.push({
+
+      prof.medicines.push({
         id: "user_" + Date.now(),
         name: name,
         dosage: document.getElementById("modalMedDosage").value.trim() || "1 Tablet",
@@ -474,16 +967,62 @@
         pillColor: slot === "Morning" ? "purple" : slot === "Afternoon" ? "fuchsia" : "violet",
         stock: parseInt(document.getElementById("modalMedStock").value, 10) || 10,
         taken: false,
-        takenAt: null
+        takenAt: null,
+        photo: modalPillPhotoBase64
       });
 
       document.getElementById("modalMedName").value = "";
       document.getElementById("modalMedPurpose").value = "";
       closeAddMedModal();
       saveState();
-      speakText("Added " + name + " to your " + slot + " medicine list.");
+      speakText("Added " + name + " to " + prof.fullName + "'s " + slot + " medicine list.");
     }
 
+    /* ==================== EMERGENCY HEALTH CARD (SOS) ==================== */
+    function openEmergencyModal() {
+      const prof = getActiveProfile();
+      document.getElementById("sosPatientTitle").textContent = prof.fullName;
+      document.getElementById("sosBlood").textContent = prof.bloodGroup;
+      document.getElementById("sosContactName").textContent = prof.contactName;
+      const phoneEl = document.getElementById("sosContactPhone");
+      phoneEl.textContent = prof.contactPhone;
+      phoneEl.href = "tel:" + prof.contactPhone.replace(/\s+/g, "");
+      document.getElementById("sosConditions").textContent = prof.conditions;
+
+      const medWrap = document.getElementById("sosActiveMeds");
+      medWrap.innerHTML = "";
+      prof.medicines.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs flex justify-between font-bold text-slate-800";
+        div.innerHTML = '<span>♥ ' + escapeHtml(m.name) + ' (' + escapeHtml(m.dosage) + ')</span><span class="text-purple-700">' + escapeHtml(m.slot) + '</span>';
+        medWrap.appendChild(div);
+      });
+
+      document.getElementById("editSosBlood").value = prof.bloodGroup;
+      document.getElementById("editSosPhone").value = prof.contactPhone;
+      document.getElementById("editSosConditions").value = prof.conditions;
+      document.getElementById("sosEditForm").classList.add("hidden");
+      document.getElementById("emergencyModal").classList.remove("hidden");
+    }
+
+    function closeEmergencyModal() {
+      document.getElementById("emergencyModal").classList.add("hidden");
+    }
+
+    function toggleSosEdit() {
+      document.getElementById("sosEditForm").classList.toggle("hidden");
+    }
+
+    function saveEmergencyInfo() {
+      const prof = getActiveProfile();
+      prof.bloodGroup = document.getElementById("editSosBlood").value.trim() || prof.bloodGroup;
+      prof.contactPhone = document.getElementById("editSosPhone").value.trim() || prof.contactPhone;
+      prof.conditions = document.getElementById("editSosConditions").value.trim() || prof.conditions;
+      saveState();
+      openEmergencyModal();
+    }
+
+    /* ==================== CORE MEDICINE ACTIONS ==================== */
     function setSlotFilter(slot) {
       currentSlotFilter = slot;
       document.querySelectorAll(".slot-tab").forEach(btn => {
@@ -494,13 +1033,16 @@
     }
 
     function toggleTaken(id) {
-      const med = medicines.find(m => m.id === id);
+      const prof = getActiveProfile();
+      const med = prof.medicines.find(m => m.id === id);
       if (!med) return;
       if (!med.taken) {
         med.taken = true;
         med.takenAt = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         if (med.stock > 0) med.stock -= 1;
-        speakText("Marked " + med.name + " as taken. Well done!");
+        speakText(appState.lang === "hi"
+          ? med.name + " की दवाई दर्ज कर ली गई है। बहुत बढ़िया!"
+          : "Marked " + med.name + " as taken. Well done!");
       } else {
         med.taken = false;
         med.takenAt = null;
@@ -510,36 +1052,34 @@
     }
 
     function resetDayProgress() {
-      medicines.forEach(m => { m.taken = false; m.takenAt = null; });
+      const prof = getActiveProfile();
+      prof.medicines.forEach(m => { m.taken = false; m.takenAt = null; });
       saveState();
     }
 
     function restoreDefaults() {
-      medicines = JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
+      appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
       saveState();
     }
 
-    function speakText(text) {
-      if (!("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      const voice = cachedFemaleVoice || selectFemaleVoice();
-      if (voice) utterance.voice = voice;
-      utterance.rate = 0.94;
-      utterance.pitch = 1.08;
-      window.speechSynthesis.speak(utterance);
-    }
-
     function speakSingleMed(id) {
-      const m = medicines.find(item => item.id === id);
+      const prof = getActiveProfile();
+      const m = prof.medicines.find(item => item.id === id);
       if (!m) return;
-      speakText(m.slot + " medicine at " + m.time + ". Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ". This helps with " + m.purpose + ".");
+      if (appState.lang === "hi") {
+        speakText(m.time + " की दवाई। " + m.name + ", " + m.dosage + ", " + m.instruction + " लें।");
+      } else {
+        speakText(m.slot + " medicine at " + m.time + ". Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ". This helps with " + m.purpose + ".");
+      }
     }
 
     function speakFullSchedule() {
-      const pending = medicines.filter(m => !m.taken);
+      const prof = getActiveProfile();
+      const pending = prof.medicines.filter(m => !m.taken);
       if (!pending.length) {
-        speakText("Wonderful job! You have taken all of your medicines for today.");
+        speakText(appState.lang === "hi"
+          ? "बहुत बढ़िया! आपने आज की सभी दवाइयाँ ले ली हैं।"
+          : "Wonderful job! You have taken all of your medicines for today.");
         return;
       }
       const summary = pending.map(m => m.slot + " at " + m.time + ": " + m.dosage + " of " + m.name + ", " + m.instruction).join(". ");
@@ -547,7 +1087,8 @@
     }
 
     function triggerDemoAlarm() {
-      const nextMed = medicines.find(m => !m.taken) || medicines[0];
+      const prof = getActiveProfile();
+      const nextMed = prof.medicines.find(m => !m.taken) || prof.medicines[0];
       if (!nextMed) {
         alert("Your medicine list is empty. Tap '+ Add Medicine' to add one first!");
         return;
@@ -556,19 +1097,30 @@
       document.getElementById("alarmMedName").textContent = nextMed.name;
       document.getElementById("alarmMedDetails").textContent = nextMed.dosage + " • " + nextMed.instruction;
       document.getElementById("alarmMedPurpose").textContent = "Purpose: " + nextMed.purpose;
+
+      const visualWrap = document.getElementById("alarmVisualWrap");
+      if (nextMed.photo) {
+        visualWrap.innerHTML = '<img src="' + nextMed.photo + '" alt="Pill" class="w-full h-full object-cover" />';
+      } else {
+        visualWrap.textContent = "♥";
+      }
+
       document.getElementById("alarmModal").classList.remove("hidden");
       speakAlarmCurrent();
+      setTimeout(listenForAlarmConfirmation, 1800);
     }
 
     function speakAlarmCurrent() {
-      const m = medicines.find(item => item.id === activeAlarmMedId);
+      const prof = getActiveProfile();
+      const m = prof.medicines.find(item => item.id === activeAlarmMedId);
       if (!m) return;
       speakText("Gentle medicine reminder. Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ".");
     }
 
     function confirmAlarmTaken() {
       if (activeAlarmMedId) {
-        const m = medicines.find(item => item.id === activeAlarmMedId);
+        const prof = getActiveProfile();
+        const m = prof.medicines.find(item => item.id === activeAlarmMedId);
         if (m && !m.taken) toggleTaken(activeAlarmMedId);
       }
       closeAlarmModal();
@@ -576,40 +1128,67 @@
 
     function closeAlarmModal() {
       if (window.speechSynthesis) window.speechSynthesis.cancel();
+      stopVoiceRecognition();
       document.getElementById("alarmModal").classList.add("hidden");
     }
 
+    /* ==================== RENDERING ==================== */
     function renderAll() {
-      const total = medicines.length;
-      const takenCount = medicines.filter(m => m.taken).length;
+      const t = I18N[appState.lang] || I18N.en;
+      const prof = getActiveProfile();
+      const meds = prof.medicines;
+
+      document.getElementById("brandSubtitle").textContent = t.subtitle;
+      document.getElementById("lblRoutineTag").textContent = t.routineTag;
+      document.getElementById("lblSubHelp").textContent = t.subHelp;
+      document.getElementById("lblAddBtn").textContent = t.addBtn;
+      document.getElementById("lblReadBtn").textContent = t.readBtn;
+      document.getElementById("lblVoiceLogBtn").textContent = t.voiceLogBtn;
+      document.getElementById("lblProgressTitle").textContent = t.progressTitle;
+
+      const total = meds.length;
+      const takenCount = meds.filter(m => m.taken).length;
       const pct = total ? Math.round((takenCount / total) * 100) : 0;
-      document.getElementById("adherenceHeading").textContent = takenCount + " of " + total + " Medicines Taken Today";
+
+      document.getElementById("adherenceHeading").textContent = t.takenProgress.replace("{t}", takenCount).replace("{n}", total);
       document.getElementById("progressPercent").textContent = pct + "%";
       document.getElementById("progressBar").style.width = pct + "%";
+
+      renderProfileBar();
       renderSeniorCards();
       renderCaregiverManageList();
+      renderVitalsHistory();
     }
 
     function renderSeniorCards() {
+      const t = I18N[appState.lang] || I18N.en;
+      const prof = getActiveProfile();
       const grid = document.getElementById("seniorCardsGrid");
       grid.innerHTML = "";
-      const filtered = currentSlotFilter === "All" ? medicines : medicines.filter(m => m.slot === currentSlotFilter);
+
+      const filtered = currentSlotFilter === "All"
+        ? prof.medicines
+        : prof.medicines.filter(m => m.slot === currentSlotFilter);
+
       const pillColors = {
         purple: "bg-purple-100 text-purple-900 border-purple-200",
         amber: "bg-amber-100 text-amber-900 border-amber-200",
         fuchsia: "bg-fuchsia-100 text-fuchsia-900 border-fuchsia-200",
-        violet: "bg-violet-100 text-violet-900 border-violet-200",
-        blue: "bg-purple-100 text-purple-900 border-purple-200",
-        emerald: "bg-fuchsia-100 text-fuchsia-900 border-fuchsia-200",
-        rose: "bg-pink-100 text-pink-900 border-pink-200"
+        violet: "bg-violet-100 text-violet-900 border-violet-200"
       };
 
       filtered.forEach(med => {
         const badgeStyle = pillColors[med.pillColor] || pillColors.purple;
         const lowStock = med.stock <= 3;
+        const localSlot = t.slots[med.slot] || med.slot;
+
+        const visualThumb = med.photo
+          ? '<img src="' + med.photo + '" alt="Tablet photo" class="w-16 h-16 rounded-2xl object-cover border-2 border-purple-200 shrink-0" />'
+          : '<div class="w-14 h-14 rounded-2xl bg-purple-100/80 border border-purple-200 flex items-center justify-center text-2xl shrink-0" title="Pill visual">💊</div>';
+
         const card = document.createElement("div");
         card.className = "senior-card rounded-3xl p-6 border-2 shadow-sm flex flex-col justify-between gap-5 " + (med.taken ? "bg-purple-50/90 border-purple-300" : "bg-white border-purple-100");
-        card.innerHTML = '<div class="space-y-3"><div class="flex items-center justify-between gap-2"><span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ' + badgeStyle + '">' + escapeHtml(med.slot) + ' • ' + escapeHtml(med.time) + '</span><button onclick="speakSingleMed(\'' + med.id + '\')" class="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs sm:text-sm border border-purple-200 cursor-pointer">🔊 Listen</button></div><div><h3 class="text-2xl font-extrabold text-slate-900">' + escapeHtml(med.name) + '</h3><p class="text-base font-bold text-purple-700 mt-0.5">' + escapeHtml(med.dosage) + ' — ' + escapeHtml(med.instruction) + '</p><p class="text-sm text-slate-600 mt-1">For: ' + escapeHtml(med.purpose) + '</p></div>' + (lowStock ? '<div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">⚠️ Low Stock Alert: Only ' + med.stock + ' pills left — Refill soon</div>' : '<div class="text-xs font-semibold text-purple-900/50">Remaining in strip: ' + med.stock + ' pills</div>') + '</div><button onclick="toggleTaken(\'' + med.id + '\')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ' + (med.taken ? 'bg-purple-200 text-purple-950 hover:bg-purple-300' : 'bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-700 hover:to-violet-700') + '">' + (med.taken ? '♥ TAKEN AT ' + escapeHtml(med.takenAt) + ' (Tap to Undo)' : '♥ MARK AS TAKEN') + '</button>';
+        card.innerHTML = '<div class="space-y-3"><div class="flex items-center justify-between gap-2"><span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ' + badgeStyle + '">' + escapeHtml(localSlot) + ' • ' + escapeHtml(med.time) + '</span><button onclick="speakSingleMed(\'' + med.id + '\')" class="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs sm:text-sm border border-purple-200 cursor-pointer">' + t.listen + '</button></div><div class="flex items-start gap-3.5">' + visualThumb + '<div><h3 class="text-2xl font-extrabold text-slate-900">' + escapeHtml(med.name) + '</h3><p class="text-base font-bold text-purple-700 mt-0.5">' + escapeHtml(med.dosage) + ' — ' + escapeHtml(med.instruction) + '</p><p class="text-sm text-slate-600 mt-1">For: ' + escapeHtml(med.purpose) + '</p></div></div>' + (lowStock ? '<div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">⚠️ Low Stock Alert: Only ' + med.stock + ' pills left — Refill soon</div>' : '<div class="text-xs font-semibold text-purple-900/50">Remaining in strip: ' + med.stock + ' pills</div>') + '</div><button onclick="toggleTaken(\'' + med.id + '\')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ' + (med.taken ? 'bg-purple-200 text-purple-950 hover:bg-purple-300' : 'bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-700 hover:to-violet-700') + '">' + (med.taken ? t.takenAt.replace('{time}', escapeHtml(med.takenAt)) : t.markTaken) + '</button>';
         grid.appendChild(card);
       });
 
@@ -617,18 +1196,19 @@
       addCard.type = "button";
       addCard.onclick = openAddMedModal;
       addCard.className = "senior-card rounded-3xl p-6 border-2 border-dashed border-purple-300 hover:border-purple-600 bg-white/80 hover:bg-purple-50/60 flex flex-col items-center justify-center text-center gap-2 min-h-[240px] cursor-pointer transition";
-      addCard.innerHTML = '<div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-3xl font-extrabold">+</div><div class="text-lg font-extrabold text-slate-900">Add Your Own Medicine</div><p class="text-xs text-slate-500 max-w-xs">Tap here to add a new tablet, capsule, or syrup to your daily list.</p>';
+      addCard.innerHTML = '<div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-3xl font-extrabold">+</div><div class="text-lg font-extrabold text-slate-900">Add Your Own Medicine</div><p class="text-xs text-slate-500 max-w-xs">Tap here to add a tablet, capsule, or syrup—with an optional pill photo.</p>';
       grid.appendChild(addCard);
     }
 
     function renderCaregiverManageList() {
+      const prof = getActiveProfile();
       const list = document.getElementById("caregiverManageList");
       list.innerHTML = "";
-      if (!medicines.length) {
-        list.innerHTML = '<p class="text-xs text-slate-400 py-3">No medicines listed yet. Add one above or scan a prescription.</p>';
+      if (!prof.medicines.length) {
+        list.innerHTML = '<p class="text-xs text-slate-400 py-3">No medicines listed for this profile yet.</p>';
         return;
       }
-      medicines.forEach(med => {
+      prof.medicines.forEach(med => {
         const row = document.createElement("div");
         row.className = "py-3 flex items-center justify-between gap-2 text-xs";
         row.innerHTML = '<div><div class="font-bold text-slate-800">' + escapeHtml(med.name) + ' <span class="text-purple-700">(' + escapeHtml(med.dosage) + ')</span></div><div class="text-slate-500">' + escapeHtml(med.slot) + ' • ' + escapeHtml(med.time) + ' • ' + med.stock + ' pills left</div></div><div class="flex items-center gap-2"><button onclick="refillMedicine(\'' + med.id + '\')" class="px-2 py-1 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200 hover:bg-purple-100 cursor-pointer">+10 Refill</button><button onclick="deleteMedicine(\'' + med.id + '\')" class="px-2 py-1 rounded bg-rose-50 text-rose-600 font-bold border border-rose-200 hover:bg-rose-100 cursor-pointer">Remove</button></div>';
@@ -637,23 +1217,26 @@
     }
 
     function refillMedicine(id) {
-      const med = medicines.find(m => m.id === id);
+      const prof = getActiveProfile();
+      const med = prof.medicines.find(m => m.id === id);
       if (!med) return;
       med.stock += 10;
       saveState();
     }
 
     function deleteMedicine(id) {
-      medicines = medicines.filter(m => m.id !== id);
+      const prof = getActiveProfile();
+      prof.medicines = prof.medicines.filter(m => m.id !== id);
       saveState();
     }
 
     function addManualMedicine() {
       const name = document.getElementById("manName").value.trim();
       if (!name) { alert("Enter a medicine name first."); return; }
+      const prof = getActiveProfile();
       const slot = document.getElementById("manSlot").value;
       const defaultTimes = { Morning: "08:30 AM", Afternoon: "01:30 PM", Night: "09:00 PM" };
-      medicines.push({
+      prof.medicines.push({
         id: "m_" + Date.now(),
         name: name,
         dosage: document.getElementById("manDosage").value.trim() || "1 Tablet",
@@ -664,7 +1247,8 @@
         pillColor: slot === "Morning" ? "purple" : slot === "Afternoon" ? "fuchsia" : "violet",
         stock: parseInt(document.getElementById("manStock").value, 10) || 10,
         taken: false,
-        takenAt: null
+        takenAt: null,
+        photo: ""
       });
       document.getElementById("manName").value = "";
       document.getElementById("manPurpose").value = "";
@@ -672,8 +1256,10 @@
       switchMode("senior");
     }
 
+    /* ==================== PRESCRIPTION SCANNER & SAFETY CHECK ==================== */
     function loadSamplePrescription() {
-      document.getElementById("rxTextInput").value = "Rx Elderly Care:\n1. Tab Ecosprin 75mg (1-0-0) after breakfast - heart protection\n2. Tab Atorva 10mg (0-0-1) after dinner - cholesterol control\n3. Cap Neurobion Forte (0-1-0) after lunch - nerve & energy support";
+      document.getElementById("rxTextInput").value =
+        "Dr. A. K. Bordoloi (MD)\n1. Tab. Thyronorm 50mcg — 1-0-0 (Empty stomach, 45 mins before breakfast) - Thyroid support\n2. Tab. Metformin 500mg — 1-0-1 (BD, after breakfast & after dinner) - Blood sugar control\n3. Tab. Shelcal 500mg — 0-1-0 (After lunch) - Calcium & bone strength\n4. Syp. Cremaffin — 10 ml (0-0-1 HS, at bedtime) - Digestion relief";
     }
 
     function handleImageUpload(event) {
@@ -711,7 +1297,7 @@
       document.getElementById("imagePreviewWrap").classList.add("hidden");
     }
 
-    async function scanPrescriptionWithAI() {
+    async function scanPrescriptionWithEngine() {
       const text = document.getElementById("rxTextInput").value.trim();
       if (!text && !uploadedImageBase64) {
         alert("Please upload a prescription photo, paste doctor notes, or click 'Load Sample Doctor Note'.");
@@ -740,22 +1326,21 @@
 
     function localFallbackParse(text) {
       const lines = (text || "Tab Vitamin D3 60K - Morning after breakfast").split("\n").filter(Boolean);
-      const parsed = lines.slice(0, 4).map((line, i) => ({
-        name: line.replace(/^\d+[\.\)]\s*/, "").split("-")[0].trim().slice(0, 36),
-        dosage: "1 Tablet",
-        slot: /night|dinner|0-0-1/i.test(line) ? "Night" : /lunch|afternoon|0-1-0/i.test(line) ? "Afternoon" : "Morning",
-        time: /night|dinner|0-0-1/i.test(line) ? "09:00 PM" : /lunch|afternoon|0-1-0/i.test(line) ? "01:30 PM" : "08:30 AM",
+      const parsed = lines.slice(0, 5).map((line, i) => ({
+        name: line.replace(/^\d+[\.\)]\s*/, "").split("—")[0].split("-")[0].trim().slice(0, 36),
+        dosage: /10\s*ml/i.test(line) ? "10 ml" : "1 Tablet",
+        slot: /night|dinner|bedtime|0-0-1/i.test(line) ? "Night" : /lunch|afternoon|0-1-0/i.test(line) ? "Afternoon" : "Morning",
+        time: /night|dinner|bedtime|0-0-1/i.test(line) ? "09:00 PM" : /lunch|afternoon|0-1-0/i.test(line) ? "01:30 PM" : "08:30 AM",
         instruction: /empty/i.test(line) ? "Empty Stomach" : "After Food",
         purpose: "Prescribed daily care",
         pillColor: i % 2 === 0 ? "purple" : "fuchsia"
       }));
-      return { source: "smart-reader", medicines: parsed, doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders." };
+      return { medicines: parsed, doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders." };
     }
 
     function showExtractedPreview(data) {
       pendingExtractedMeds = data.medicines || [];
-      document.getElementById("aiScanResultBox").classList.remove("hidden");
-      document.getElementById("scanEngineTag").textContent = "♥ CarePulse Reader";
+      document.getElementById("scanResultBox").classList.remove("hidden");
       document.getElementById("doctorSummaryText").textContent = data.doctorNoteSummary || "Extracted daily schedule below:";
       const list = document.getElementById("extractedList");
       list.innerHTML = "";
@@ -768,8 +1353,9 @@
     }
 
     function applyExtractedMedicines() {
+      const prof = getActiveProfile();
       pendingExtractedMeds.forEach((m, idx) => {
-        medicines.push({
+        prof.medicines.push({
           id: "rx_" + Date.now() + "_" + idx,
           name: m.name,
           dosage: m.dosage || "1 Tablet",
@@ -780,15 +1366,17 @@
           pillColor: m.slot === "Afternoon" ? "fuchsia" : m.slot === "Night" ? "violet" : "purple",
           stock: 10,
           taken: false,
-          takenAt: null
+          takenAt: null,
+          photo: ""
         });
       });
-      document.getElementById("aiScanResultBox").classList.add("hidden");
+      document.getElementById("scanResultBox").classList.add("hidden");
       saveState();
       switchMode("senior");
     }
 
     async function runSafetyCheck() {
+      const prof = getActiveProfile();
       const btn = document.getElementById("safetyBtn");
       btn.textContent = "Checking...";
       btn.disabled = true;
@@ -796,7 +1384,7 @@
         const res = await fetch("/api/meditrack", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "check_interactions", medicines: medicines })
+          body: JSON.stringify({ action: "check_interactions", medicines: prof.medicines })
         });
         if (!res.ok) throw new Error("Fallback");
         const data = await res.json();
@@ -804,8 +1392,8 @@
       } catch (err) {
         renderSafetyBox({
           safetyStatus: "Timing Tips",
-          headline: "Space empty-stomach acidity capsules at least 30 minutes before breakfast.",
-          alerts: [{ title: "Meal Spacing Rule", detail: "Take empty-stomach medicines with plain water first, then take blood pressure and diabetes tablets after meals." }],
+          headline: "Space empty-stomach thyroid or acidity tablets at least 30–45 minutes before tea or breakfast.",
+          alerts: [{ title: "Calcium & Absorption Spacing", detail: "Keep calcium supplements at least 4 hours apart from thyroid or iron tablets for proper absorption." }],
           elderlyTip: "Keep a full bottle of water next to the morning pill organizer to prevent skipped doses."
         });
       } finally {
@@ -829,25 +1417,85 @@
       });
     }
 
+    /* ==================== VITALS LOGGING & ROADMAP DEMOS ==================== */
+    function selectMood(mood) {
+      selectedMood = mood;
+      document.querySelectorAll(".mood-btn").forEach(btn => {
+        btn.className = btn.textContent.includes(mood.split(" ")[1] || mood.split(" ")[0])
+          ? "mood-btn p-2.5 rounded-xl border-2 border-purple-600 bg-purple-50 text-xs font-extrabold text-purple-950 cursor-pointer"
+          : "mood-btn p-2.5 rounded-xl border-2 border-purple-100 bg-white text-xs font-bold text-slate-700 cursor-pointer";
+      });
+    }
+
+    function logVitalsEntry() {
+      const prof = getActiveProfile();
+      const bp = document.getElementById("vitalBp").value.trim() || "122/80";
+      const sugar = document.getElementById("vitalSugar").value.trim();
+      prof.vitals.unshift({
+        time: "Today, " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        bp: bp,
+        sugar: sugar ? sugar + " mg/dL" : "Not logged",
+        mood: selectedMood
+      });
+      document.getElementById("vitalBp").value = "";
+      document.getElementById("vitalSugar").value = "";
+      saveState();
+      speakText("Vitals check-in saved for " + prof.fullName + ".");
+    }
+
+    function renderVitalsHistory() {
+      const prof = getActiveProfile();
+      const wrap = document.getElementById("vitalsHistoryList");
+      if (!wrap) return;
+      wrap.innerHTML = "";
+      (prof.vitals || []).forEach(v => {
+        const div = document.createElement("div");
+        div.className = "p-3 rounded-xl bg-purple-50/70 border border-purple-100 text-xs flex items-center justify-between gap-2";
+        div.innerHTML = '<div><div class="font-extrabold text-purple-950">BP: ' + escapeHtml(v.bp) + ' • Sugar: ' + escapeHtml(v.sugar) + '</div><div class="text-slate-500">' + escapeHtml(v.time) + '</div></div><span class="px-2.5 py-1 rounded-lg bg-white border border-purple-200 font-bold text-purple-900">' + escapeHtml(v.mood) + '</span>';
+        wrap.appendChild(div);
+      });
+    }
+
+    function simulateEscalationAlert() {
+      const prof = getActiveProfile();
+      const pending = prof.medicines.find(m => !m.taken) || prof.medicines[0];
+      const medName = pending ? pending.name : "Telma 40mg";
+      const msg = "🚨 CarePulse Escalation Simulation:\n\n" +
+        prof.fullName + " has not confirmed their scheduled dose of " + medName + " after 30 minutes.\n\n" +
+        "1. Automated WhatsApp reminder sent to " + prof.contactName + " (" + prof.contactPhone + ").\n" +
+        "2. Gentle voice follow-up triggered on senior's device.";
+      speakText("Attention caregiver. " + prof.fullName + " has not confirmed " + medName + " after thirty minutes. Sending WhatsApp alert now.");
+      alert(msg);
+    }
+
     function copyCaregiverReport() {
-      const taken = medicines.filter(m => m.taken).map(m => "♥ " + m.name + " (" + m.takenAt + ")");
-      const pending = medicines.filter(m => !m.taken).map(m => "⏳ " + m.name + " (" + m.slot + ")");
-      const lowStock = medicines.filter(m => m.stock <= 3).map(m => "⚠️ Refill " + m.name + " (" + m.stock + " left)");
+      const prof = getActiveProfile();
+      const taken = prof.medicines.filter(m => m.taken).map(m => "♥ " + m.name + " (" + m.takenAt + ")");
+      const pending = prof.medicines.filter(m => !m.taken).map(m => "⏳ " + m.name + " (" + m.slot + ")");
+      const lowStock = prof.medicines.filter(m => m.stock <= 3).map(m => "⚠️ Refill " + m.name + " (" + m.stock + " left)");
+      const latestVital = prof.vitals && prof.vitals[0] ? "🩺 Vitals: BP " + prof.vitals[0].bp + ", Sugar " + prof.vitals[0].sugar + " (" + prof.vitals[0].mood + ")" : "";
+
       const report = [
-        "♥ *CarePulse Daily Caregiver Update*",
-        "Completed (" + taken.length + "/" + medicines.length + "):",
+        "♥ *CarePulse Family Update — " + prof.fullName + "*",
+        "Completed (" + taken.length + "/" + prof.medicines.length + "):",
         ...(taken.length ? taken : ["None yet"]),
         "",
         "Upcoming:",
         ...(pending.length ? pending : ["All done for today!"]),
+        ...(latestVital ? ["", latestVital] : []),
         ...(lowStock.length ? ["", "Refill Alerts:", ...lowStock] : [])
       ].join("\n");
       if (navigator.clipboard) navigator.clipboard.writeText(report);
-      alert("Caregiver WhatsApp report copied to clipboard!\n\n" + report);
+      alert("Family WhatsApp update copied to clipboard!\n\n" + report);
+    }
+
+    function exportDoctorReport() {
+      copyCaregiverReport();
+      window.print();
     }
 
     function escapeHtml(str) {
-      return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      return String(str || "").replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/"/g, """);
     }
 
     renderAll();
