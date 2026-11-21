@@ -1,0 +1,12 @@
+{
+  "name": "carepulse-senior-companion",
+  "version": "1.0.0",
+  "description": "Multilingual Senior Medicine & Family Care Companion",
+  "main": "app.js",
+  "scripts": {
+    "test": "node --test tests/carepulse.test.js"
+  },
+  "keywords": ["healthcare", "accessibility", "senior-care", "multilingual"],
+  "author": "Abhinab Borah",
+  "license": "MIT"
+}
