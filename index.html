@@ -7,6 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    html { font-size: 16px; transition: font-size 0.15s ease; }
+    html.large-font { font-size: 18.5px; }
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: linear-gradient(155deg, #f3e8ff 0%, #faf5ff 45%, #ffffff 100%);
@@ -36,6 +38,11 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
+        <!-- Font Size Toggle (A / A+) -->
+        <button type="button" id="fontSizeToggleBtn" data-action="toggle-font-size" data-i18n="fontNormal" class="px-2.5 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-950 font-extrabold text-xs border border-purple-200 cursor-pointer" title="Toggle Larger Text">
+          A+ Text
+        </button>
+
         <!-- Global Language Switcher -->
         <div class="bg-purple-50 p-1 rounded-xl border border-purple-200 flex items-center text-xs font-extrabold">
           <button type="button" data-lang="en" class="lang-btn px-2.5 py-1 rounded-lg bg-purple-700 text-white cursor-pointer">English</button>
@@ -92,7 +99,6 @@
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-purple-100 text-purple-800 border border-purple-200" data-i18n="routineTag">
               ♥ Today's Routine
             </span>
-            <!-- In-Menu Language Selector 1 -->
             <div class="inline-flex items-center gap-1 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200 text-[11px] font-bold text-purple-900">
               <span data-i18n="langLabel">Language:</span>
               <button type="button" data-lang="en" class="lang-btn px-2 py-0.5 rounded-full bg-purple-700 text-white cursor-pointer">English</button>
@@ -200,7 +206,7 @@
               <label for="rxTextInput" class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1.5" data-i18n="pasteRxLabel">
                 Or Paste Prescription / Dosage Instructions
               </label>
-              <textarea id="rxTextInput" rows="4" data-i18n-placeholder="rxPlaceholder" placeholder="Example: Tab Thyronorm 50mcg 1-0-0 empty stomach before breakfast. Tab Metformin 500mg 1-0-1 after meals." class="w-full rounded-2xl border-2 border-purple-100 p-3.5 text-sm text-slate-800 focus:outline-none focus:border-purple-600"></textarea>
+              <textarea id="rxTextInput" rows="4" data-i18n-placeholder="rxPlaceholder" placeholder="Example: Tab Thyronorm 50mcg 1-0-0 empty stomach before breakfast." class="w-full rounded-2xl border-2 border-purple-100 p-3.5 text-sm text-slate-800 focus:outline-none focus:border-purple-600"></textarea>
             </div>
 
             <button type="button" id="scanBtn" data-action="scan-rx" data-i18n="extractBtn" class="mt-4 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm shadow-md cursor-pointer">
@@ -240,6 +246,20 @@
               <p id="elderlyTipText" class="text-xs font-medium text-slate-700 bg-white p-3 rounded-xl border border-purple-100"></p>
             </div>
           </div>
+
+          <!-- Low-Stock Pharmacy Refill List Card -->
+          <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-lg font-extrabold text-slate-900" data-i18n="refillCardTitle">💊 Low-Stock Pharmacy Refill List</h3>
+                <p class="text-xs text-slate-500" data-i18n="refillCardSub">Medicines with 3 or fewer pills left for quick chemist ordering.</p>
+              </div>
+              <button type="button" data-action="copy-refill" data-i18n="copyRefillBtn" class="px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-xs border border-amber-300 cursor-pointer">
+                📋 Copy Refill List
+              </button>
+            </div>
+            <div id="lowStockRefillList" class="space-y-2"></div>
+          </div>
         </div>
 
         <div class="lg:col-span-5 space-y-6">
@@ -269,9 +289,14 @@
               <h3 class="text-lg font-extrabold text-slate-900" data-i18n="completeListTitle">Complete Medicine List</h3>
               <button type="button" data-action="restore-defaults" data-i18n="restoreBtn" class="text-xs font-bold text-purple-600 hover:text-purple-900 cursor-pointer">Restore Demo Data</button>
             </div>
-            <button type="button" data-action="copy-report" data-i18n="copyWhatsappBtn" class="w-full py-3 px-4 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-200 font-bold text-sm cursor-pointer">
-              ♥ Copy Family WhatsApp Status Update
-            </button>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button type="button" data-action="copy-report" data-i18n="copyWhatsappBtn" class="py-3 px-3 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-200 font-bold text-xs cursor-pointer">
+                ♥ Copy Status
+              </button>
+              <button type="button" data-action="share-whatsapp" data-i18n="directWhatsappBtn" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer">
+                💬 Send on WhatsApp
+              </button>
+            </div>
             <div id="caregiverManageList" class="divide-y divide-purple-100 pt-2"></div>
           </div>
         </div>
@@ -452,7 +477,6 @@
       </div>
       <div>
         <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-purple-100 text-purple-800" data-i18n="alarmTag">Gentle Medicine Reminder</span>
-        <!-- Dose FIRST in selected language, English medicine name AFTER -->
         <p id="alarmMedDetails" class="text-lg font-bold text-purple-700 pt-2">1 Tablet • After Breakfast</p>
         <h2 id="alarmMedName" class="text-3xl font-extrabold text-slate-900 pt-0.5">Telma 40mg</h2>
         <p id="alarmMedPurpose" class="text-sm text-slate-500 pt-1">Keeps blood pressure steady</p>
@@ -482,6 +506,8 @@
       const I18N = {
         en: {
           subtitle: "Gentle Medicine & Family Care Companion",
+          fontNormal: "A+ Text",
+          fontLarge: "A Text",
           navSenior: "My Medicines",
           navCaregiver: "Caregiver & Rx",
           navVitals: "Vitals & Vision",
@@ -530,6 +556,10 @@
           safetyTitle: "♥ Meal-Timing & Safety Check",
           safetySub: "Checks empty-stomach rules, spacing, and senior care tips.",
           runSafetyBtn: "🩺 Run Safety Check",
+          refillCardTitle: "💊 Low-Stock Pharmacy Refill List",
+          refillCardSub: "Medicines with 3 or fewer pills left for quick chemist ordering.",
+          copyRefillBtn: "📋 Copy Refill List",
+          allStockGood: "All medicines currently have more than 3 pills left.",
           addManualTitle: "Add Medicine Manually",
           medNamePlaceholder: "Medicine Name in English (e.g., Amlodipine 5mg)",
           optMorning: "Morning (08:30 AM)",
@@ -539,7 +569,8 @@
           addScheduleBtn: "+ Add to Schedule",
           completeListTitle: "Complete Medicine List",
           restoreBtn: "Restore Demo Data",
-          copyWhatsappBtn: "♥ Copy Family WhatsApp Status Update",
+          copyWhatsappBtn: "♥ Copy Status",
+          directWhatsappBtn: "💬 Send on WhatsApp",
           refillBtn: "+10 Refill",
           wellnessTag: "♥ Daily Wellness Check",
           vitalsTitle: "Vitals & Post-Dose Symptom Log",
@@ -584,6 +615,8 @@
         },
         hi: {
           subtitle: "बुजुर्गों की दवा और परिवार देखभाल साथी",
+          fontNormal: "A+ बड़ा अक्षर",
+          fontLarge: "A सामान्य",
           navSenior: "मेरी दवाइयाँ",
           navCaregiver: "देखभाल और पर्चा",
           navVitals: "स्वास्थ्य और विज़न",
@@ -632,6 +665,10 @@
           safetyTitle: "♥ भोजन-समय और सुरक्षा जांच",
           safetySub: "खाली पेट की दवाओं और खुराक के अंतर की जांच करता है।",
           runSafetyBtn: "🩺 सुरक्षा जांच करें",
+          refillCardTitle: "💊 कम स्टॉक दवा की सूची",
+          refillCardSub: "जिन दवाओं में 3 या उससे कम गोलियाँ बची हैं उनकी सूची।",
+          copyRefillBtn: "📋 सूची कॉपी करें",
+          allStockGood: "सभी दवाओं में 3 से अधिक गोलियाँ उपलब्ध हैं।",
           addManualTitle: "दवा स्वयं जोड़ें",
           medNamePlaceholder: "दवा का नाम अंग्रेजी में (जैसे: Amlodipine 5mg)",
           optMorning: "सुबह (08:30 AM)",
@@ -641,7 +678,8 @@
           addScheduleBtn: "+ सूची में जोड़ें",
           completeListTitle: "पूरी दवा सूची",
           restoreBtn: "पुराना डेटा वापस लाएं",
-          copyWhatsappBtn: "♥ परिवार व्हाट्सएप अपडेट कॉपी करें",
+          copyWhatsappBtn: "♥ रिपोर्ट कॉपी करें",
+          directWhatsappBtn: "💬 व्हाट्सएप पर भेजें",
           refillBtn: "+10 और जोड़ें",
           wellnessTag: "♥ दैनिक स्वास्थ्य जांच",
           vitalsTitle: "रक्तचाप, शुगर और लक्षण लॉग",
@@ -686,6 +724,8 @@
         },
         as: {
           subtitle: "জ্যেষ্ঠজনৰ ঔষধ আৰু পৰিয়ালৰ যত্নৰ সংগী",
+          fontNormal: "A+ ডাঙৰ আখৰ",
+          fontLarge: "A সাধাৰণ",
           navSenior: "মোৰ ঔষধসমূহ",
           navCaregiver: "যত্ন লওঁতা আৰু পৰ্চা",
           navVitals: "স্বাস্থ্য আৰু পৰিকল্পনা",
@@ -734,6 +774,10 @@
           safetyTitle: "♥ আহাৰৰ সময় আৰু সুৰক্ষা পৰীক্ষা",
           safetySub: "খালী পেটত খোৱা ঔষধ আৰু সময়ৰ ব্যৱধান পৰীক্ষা কৰে।",
           runSafetyBtn: "🩺 সুৰক্ষা পৰীক্ষা কৰক",
+          refillCardTitle: "💊 কম ষ্টক ঔষধৰ তালিকা",
+          refillCardSub: "৩ টা বা তাতকৈ কম বড়ি বাকী থকা ঔষধসমূহৰ তালিকা।",
+          copyRefillBtn: "📋 তালিকা কপি কৰক",
+          allStockGood: "সকলো ঔষধতে ৩ টাতকৈ অধিক বড়ি আছে।",
           addManualTitle: "নিজে ঔষধ যোগ কৰক",
           medNamePlaceholder: "ঔষধৰ নাম ইংৰাজীত (যেনে: Amlodipine 5mg)",
           optMorning: "ৰাতিপুৱা (08:30 AM)",
@@ -743,7 +787,8 @@
           addScheduleBtn: "+ তালিকাত যোগ কৰক",
           completeListTitle: "সম্পূৰ্ণ ঔষধৰ তালিকা",
           restoreBtn: "আগৰ তথ্য ঘূৰাই আনক",
-          copyWhatsappBtn: "♥ পৰিয়ালৰ হোৱাটছএপ আপডেট কপি কৰক",
+          copyWhatsappBtn: "♥ তালিকা কপি কৰক",
+          directWhatsappBtn: "💬 হোৱাটছএপত পঠিয়াওক",
           refillBtn: "+১০ যোগ কৰক",
           wellnessTag: "♥ দৈনিক স্বাস্থ্য পৰীক্ষা",
           vitalsTitle: "ৰক্তচাপ, চুগাৰ আৰু লক্ষণৰ তালিকা",
@@ -852,6 +897,7 @@
 
       const DEFAULT_STATE = {
         lang: "en",
+        largeFont: false,
         activeProfileId: "p1",
         profiles: [
           {
@@ -887,7 +933,7 @@
 
       let appState;
       try {
-        const raw = JSON.parse(localStorage.getItem("carepulse_v4"));
+        const raw = JSON.parse(localStorage.getItem("carepulse_v5"));
         appState = raw && Array.isArray(raw.profiles) && raw.profiles.length ? raw : JSON.parse(JSON.stringify(DEFAULT_STATE));
       } catch (e) {
         appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -907,7 +953,7 @@
       }
 
       function saveState() {
-        try { localStorage.setItem("carepulse_v4", JSON.stringify(appState)); } catch (e) {}
+        try { localStorage.setItem("carepulse_v5", JSON.stringify(appState)); } catch (e) {}
         renderAll();
       }
 
@@ -944,12 +990,20 @@
         window.speechSynthesis.speak(u);
       }
 
+      function applyFontSize() {
+        document.documentElement.classList.toggle("large-font", Boolean(appState.largeFont));
+        const t = I18N[appState.lang] || I18N.en;
+        const btn = document.getElementById("fontSizeToggleBtn");
+        if (btn) btn.textContent = appState.largeFont ? t.fontLarge : t.fontNormal;
+      }
+
       function applyStaticTranslations() {
         const lang = appState.lang;
         const t = I18N[lang] || I18N.en;
 
         document.querySelectorAll("[data-i18n]").forEach(el => {
           const key = el.getAttribute("data-i18n");
+          if (key === "fontNormal") return;
           if (t[key]) el.textContent = t[key];
         });
 
@@ -964,6 +1018,8 @@
             ? "lang-btn px-2.5 py-1 rounded-lg bg-purple-700 text-white cursor-pointer"
             : "lang-btn px-2.5 py-1 rounded-lg text-purple-900 hover:bg-purple-100 cursor-pointer";
         });
+
+        applyFontSize();
       }
 
       function switchMode(mode) {
@@ -998,6 +1054,24 @@
           med.stock += 1;
         }
         saveState();
+      }
+
+      function buildStatusReport() {
+        const lang = appState.lang;
+        const prof = getActiveProfile();
+        const lines = prof.medicines.map(m =>
+          (m.taken ? "♥ " : "⏳ ") + trPhrase(m.dosage, lang) + " — " + m.name
+        );
+        return "CarePulse ♥ — " + prof.fullName + "\n" + lines.join("\n");
+      }
+
+      function buildRefillListText() {
+        const lang = appState.lang;
+        const t = I18N[lang] || I18N.en;
+        const prof = getActiveProfile();
+        const low = prof.medicines.filter(m => m.stock <= 3);
+        if (!low.length) return t.allStockGood;
+        return low.map(m => "• " + trPhrase(m.dosage, lang) + " — " + m.name + " (" + m.stock + " " + t.pillsUnit + ")").join("\n");
       }
 
       function renderProfileBar() {
@@ -1080,17 +1154,14 @@
 
           const info = document.createElement("div");
 
-          // 1. DOSE & INSTRUCTION FIRST (in selected language)
           const doseLine = document.createElement("p");
           doseLine.className = "text-base sm:text-lg font-extrabold text-purple-700";
           doseLine.textContent = doseText + " — " + instText;
 
-          // 2. MEDICINE NAME AFTER DOSE (Always in English)
           const medNameEl = document.createElement("h3");
           medNameEl.className = "text-2xl font-extrabold text-slate-900 mt-0.5";
           medNameEl.textContent = med.name;
 
-          // 3. PURPOSE (in selected language)
           const purposeEl = document.createElement("p");
           purposeEl.className = "text-sm text-slate-600 mt-1";
           purposeEl.textContent = t.forLabel + ": " + purposeText;
@@ -1140,7 +1211,6 @@
           row.className = "py-3 flex items-center justify-between gap-2 text-xs";
 
           const left = document.createElement("div");
-          // Dose first in selected language, English Medicine Name after
           left.innerHTML = '<div class="font-bold text-slate-800"><span class="text-purple-700">' + trPhrase(med.dosage, lang) + '</span> — ' + med.name + '</div><div class="text-slate-500">' + (t.slots[med.slot] || med.slot) + ' • ' + med.time + ' • ' + med.stock + ' ' + t.pillsUnit + '</div>';
 
           const right = document.createElement("div");
@@ -1165,6 +1235,23 @@
           row.append(left, right);
           list.appendChild(row);
         });
+
+        const refillWrap = document.getElementById("lowStockRefillList");
+        refillWrap.innerHTML = "";
+        const lowMeds = prof.medicines.filter(m => m.stock <= 3);
+        if (!lowMeds.length) {
+          const p = document.createElement("p");
+          p.className = "text-xs text-slate-500";
+          p.textContent = t.allStockGood;
+          refillWrap.appendChild(p);
+        } else {
+          lowMeds.forEach(m => {
+            const item = document.createElement("div");
+            item.className = "p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs flex items-center justify-between font-bold text-amber-950";
+            item.innerHTML = '<span><span class="text-purple-800">' + trPhrase(m.dosage, lang) + '</span> — ' + m.name + '</span><span>' + m.stock + ' ' + t.pillsUnit + '</span>';
+            refillWrap.appendChild(item);
+          });
+        }
       }
 
       function renderVitalsAndMeds() {
@@ -1249,7 +1336,6 @@
         const nextMed = prof.medicines.find(m => !m.taken) || prof.medicines[0];
         if (!nextMed) return;
         activeAlarmMedId = nextMed.id;
-        // Dose FIRST in selected language, English medicine name AFTER
         document.getElementById("alarmMedDetails").textContent = trPhrase(nextMed.dosage, lang) + " • " + trPhrase(nextMed.instruction, lang);
         document.getElementById("alarmMedName").textContent = nextMed.name;
         document.getElementById("alarmMedPurpose").textContent = trPhrase(nextMed.purpose, lang);
@@ -1314,7 +1400,11 @@
         const lang = appState.lang;
         const t = I18N[lang] || I18N.en;
 
-        if (action === "open-add-med") openAddMedModal();
+        if (action === "toggle-font-size") {
+          appState.largeFont = !appState.largeFont;
+          saveState();
+        }
+        else if (action === "open-add-med") openAddMedModal();
         else if (action === "close-add-med") document.getElementById("addMedModal").classList.add("hidden");
         else if (action === "save-modal-med") {
           const name = document.getElementById("modalMedName").value.trim();
@@ -1436,7 +1526,6 @@
           pendingExtractedMeds.forEach(m => {
             const d = document.createElement("div");
             d.className = "p-3 rounded-xl bg-white border border-purple-100 text-xs font-bold text-slate-800";
-            // Dose first in selected language, English medicine name after
             d.innerHTML = '<span class="text-purple-700">' + (t.slots[m.slot] || m.slot) + ' • ' + trPhrase(m.dosage, lang) + ' (' + trPhrase(m.instruction, lang) + ')</span> — ' + m.name;
             list.appendChild(d);
           });
@@ -1455,6 +1544,11 @@
           document.getElementById("safetyBadge").textContent = "♥ OK";
           document.getElementById("safetyAlertsList").innerHTML = '<div class="p-3 rounded-xl bg-white border border-purple-100 text-xs font-bold">' + trPhrase("Empty Stomach (30 mins before food)", lang) + '</div>';
           document.getElementById("elderlyTipText").textContent = "♥ " + t.footerText;
+        }
+        else if (action === "copy-refill") {
+          const text = t.refillCardTitle + " (" + prof.fullName + "):\n" + buildRefillListText();
+          if (navigator.clipboard) navigator.clipboard.writeText(text);
+          alert(text);
         }
         else if (action === "add-manual") {
           const name = document.getElementById("manName").value.trim();
@@ -1485,11 +1579,15 @@
           saveState();
         }
         else if (action === "copy-report" || action === "export-doctor") {
-          const lines = prof.medicines.map(m => (m.taken ? "♥ " : "⏳ ") + trPhrase(m.dosage, lang) + " — " + m.name);
-          const report = "CarePulse ♥ — " + prof.fullName + "\n" + lines.join("\n");
+          const report = buildStatusReport();
           if (navigator.clipboard) navigator.clipboard.writeText(report);
           if (action === "export-doctor") window.print();
           else alert(report);
+        }
+        else if (action === "share-whatsapp") {
+          const report = buildStatusReport();
+          if (navigator.clipboard) navigator.clipboard.writeText(report);
+          window.open("https://wa.me/?text=" + encodeURIComponent(report), "_blank", "noopener,noreferrer");
         }
         else if (action === "log-vitals") {
           prof.vitals.unshift({
