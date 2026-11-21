@@ -8,32 +8,33 @@
 
 ## Overview
 
-**CarePulse ♥** is an accessible, offline-ready web application designed to help elderly family members manage daily medications independently while keeping caregivers informed. Built with high-contrast senior-friendly cards, natural female voice readouts, hands-free voice confirmation, and full regional language support across **English**, **हिन्दी (Hindi)**, and **অসমীয়া (Assamese)**, CarePulse bridges the gap between complex prescriptions and everyday elder care.
+**CarePulse ♥** is an accessible, offline-ready web application designed to help elderly family members manage daily medications independently while keeping caregivers informed. With full localization across **English**, **हिन्दी (Hindi)**, and **অসমীয়া (Assamese)**, natural female voice readouts, hands-free voice confirmation, large-text toggle, direct WhatsApp sharing, and low-stock refill tracking, CarePulse keeps daily elder care simple and reliable.
 
 ---
 
 ## Key Features
 
 ### 1. Multilingual Interface with English Medicine Names After Doses
-* **Full UI Localization (`English` | `हिन्दी` | `অসমীয়া`):** Switching languages translates every menu, heading, button, meal instruction, and modal across all three views (**My Medicines**, **Caregiver & Rx**, and **Vitals & Vision**).
-* **Dose-First, English-Medicine Format:** On every card, list, and alarm, the **dosage and meal timing** appear first in the user's selected language (e.g., `1 गोली — नाश्ते के बाद` or `১ টা টেবলেট — পুৱাৰ আহাৰৰ পিছত`), followed immediately by the **English medicine name** (`Telma 40mg`) so elders and pharmacists never misread drug names.
-* **In-Menu Language Selectors:** Synchronized language switchers are accessible from the top navigation bar as well as inside every individual menu tab.
+* **Full UI Localization (`English` | `हिन्दी` | `অসমীয়া`):** Switching languages translates menus, buttons, meal instructions, and modals across all three views (**My Medicines**, **Caregiver & Rx**, and **Vitals & Vision**).
+* **Dose-First, English-Medicine Format:** Every card, list, and alarm shows the **dosage and meal timing** first in the chosen language, followed immediately by the **English medicine name** (`Telma 40mg`) for clear recognition.
+* **In-Menu Language Selectors:** Language switchers are available in the top bar as well as inside all three menu tabs.
 
-### 2. Senior-Friendly Medicine Routine (`My Medicines`)
-* **One-Tap Dose Confirmation & Progress Tracking:** Large, clear cards organized by **Morning**, **Afternoon**, and **Night** with live daily progress tracking and low-stock refill alerts.
-* **Natural Female Voice Readout & Hands-Free Logging:** Uses the Web Speech API (`SpeechSynthesis` & `SpeechRecognition`) so seniors can listen to dose instructions aloud or confirm doses hands-free by saying *"Taken"* or *"Dawai le li"*.
-* **Custom Medicine & Pill Photo Upload:** Elders or family members can add new medications with an optional photo of the actual tablet or strip for visual verification.
-* **Multi-Elder Household Profiles:** Switch between multiple family profiles (e.g., *Dada* and *Dadi*) or add new senior profiles with persistent local storage.
+### 2. Senior Accessibility & Voice Support (`My Medicines`)
+* **Senior Font-Size Toggle (`A+ Text`):** One-tap larger-text scaling across the app for comfortable reading.
+* **One-Tap Dose Confirmation & Progress Tracking:** Cards grouped by **Morning**, **Afternoon**, and **Night** with live daily progress tracking and low-stock indicators (`<= 3` pills left).
+* **Natural Female Voice Readout & Hands-Free Logging:** Reads dose schedules aloud using Web Speech API (`SpeechSynthesis`) and supports hands-free voice confirmation (`SpeechRecognition`) by saying *"Taken"* or *"Dawai le li"*.
+* **Custom Medicine, Pill Photo & Multi-Elder Profiles:** Add custom medications with optional tablet/strip photos and switch between family profiles (*Dada* and *Dadi*) saved locally in `localStorage`.
 
-### 3. Caregiver & Prescription Tools (`Caregiver & Rx`)
-* **Smart Prescription Reader:** Upload a prescription photo or paste doctor dosage shorthand (`1-0-1`, `BD`) to automatically extract and schedule Morning, Afternoon, and Night reminders.
-* **Meal-Timing & Safety Check:** Validates empty-stomach rules and spacing intervals between medications.
-* **One-Click Family WhatsApp Update:** Generates a formatted adherence summary ready to paste and share with family members.
+### 3. Caregiver, Prescription & Refill Tools (`Caregiver & Rx`)
+* **Smart Prescription Reader:** Upload a prescription photo or paste dosage shorthand (`1-0-1`, `BD`) to generate scheduled reminders automatically.
+* **Meal-Timing & Safety Check:** Highlights empty-stomach timing and spacing reminders.
+* **Low-Stock Pharmacy Refill List:** Automatically lists medications with 3 or fewer pills remaining and copies a quick chemist refill list.
+* **Direct WhatsApp Share & Status Copy:** Copies the adherence update or opens `wa.me` directly with the pre-filled summary.
 
 ### 4. Vitals Log, Emergency SOS Card & Escalation (`Vitals & Vision`)
-* **No-Login Emergency SOS Card (`♥ SOS Card`):** Displays blood group, emergency contact with one-tap calling, medical conditions/allergies, and active medications.
-* **Live Voice Alarm (`🔔 Live Alarm`):** Interactive reminder modal with voice readout, snooze, and hands-free confirmation.
-* **Vitals & Symptom Check-In:** Tracks daily blood pressure, blood sugar, and post-dose well-being alongside a printable doctor summary and 30-minute missed-dose caregiver escalation preview.
+* **No-Login Emergency SOS Card (`♥ SOS Card`):** Shows blood group, emergency contact with one-tap calling, allergies/conditions, and active doses.
+* **Live Voice Alarm (`🔔 Live Alarm`):** Interactive dose reminder modal with voice readout, snooze, and hands-free confirmation.
+* **Vitals & Symptom Log:** Records daily BP, blood sugar, and post-dose symptoms alongside a printable doctor summary and 30-minute missed-dose escalation preview.
 
 ---
 
@@ -48,8 +49,8 @@
 
 ## Quick Judge Walkthrough
 
-1. Open **[https://meditrack-ai-tau.vercel.app](https://meditrack-ai-tau.vercel.app)** — pre-loaded demo profiles and daily schedules appear immediately with no login required.
-2. Switch between **English**, **हिन्दी**, and **অসমীয়া** in the top bar or inside any menu tab to see the entire UI translate while keeping medicine names in English after each dose.
-3. Click **🔔 Live Alarm** to preview the voice-guided medicine reminder and hands-free confirmation.
-4. Open **Caregiver & Rx** and click **Load Sample Doctor Note → ♥ Extract Senior Schedule** to test automated prescription parsing.
+1. Open **[https://meditrack-ai-tau.vercel.app](https://meditrack-ai-tau.vercel.app)** to view pre-loaded elder profiles with zero login required.
+2. Switch between **English**, **हिन्दी**, and **অসমীয়া** in the header or inside any menu tab, and click **A+ Text** to test large-font mode.
+3. Click **🔔 Live Alarm** to preview voice reminders and hands-free confirmation.
+4. Open **Caregiver & Rx** to test **Load Sample Doctor Note → ♥ Extract Senior Schedule**, view the **Low-Stock Pharmacy Refill List**, and use **💬 Send on WhatsApp**.
 5. Click **♥ SOS Card** in the header to view the instant emergency medical ID.
