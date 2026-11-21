@@ -3,43 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MediTrack AI — Smart Senior Medicine & Caregiver Assistant</title>
+  <title>CarePulse ♥ — Gentle Senior Medicine & Caregiver Companion</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f7fb; color: #0f172a; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(155deg, #f3e8ff 0%, #faf5ff 42%, #ffffff 100%);
+      color: #1e1b4b;
+    }
     .senior-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
     .senior-card:hover { transform: translateY(-2px); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <header class="bg-white border-b-2 border-slate-200 sticky top-0 z-30 shadow-sm">
+  <!-- Top Accessible Header -->
+  <header class="bg-white/90 border-b-2 border-purple-100 sticky top-0 z-30 shadow-sm backdrop-blur-md">
     <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/20">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-600 text-white flex items-center justify-center shadow-md shadow-purple-600/25">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
           </svg>
         </div>
         <div>
-          <h1 class="text-xl font-extrabold tracking-tight text-slate-900">MediTrack <span class="text-teal-600">AI</span></h1>
-          <p class="text-xs font-medium text-slate-500">Accessible Medicine Companion & AI Prescription Reader</p>
+          <h1 class="text-xl font-extrabold tracking-tight text-slate-900">CarePulse <span class="text-purple-600">♥</span></h1>
+          <p class="text-xs font-medium text-purple-700/80">Gentle Medicine Companion & Caregiver Helper</p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center">
-          <button id="btnSeniorMode" onclick="switchMode('senior')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer">
-            Senior View (Large)
+        <div class="bg-purple-50 p-1 rounded-xl border border-purple-200/80 flex items-center">
+          <button id="btnSeniorMode" onclick="switchMode('senior')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer">
+            My Medicines (Senior)
           </button>
-          <button id="btnCaregiverMode" onclick="switchMode('caregiver')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer">
-            Caregiver & AI Scan
+          <button id="btnCaregiverMode" onclick="switchMode('caregiver')" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-purple-900/70 hover:text-purple-950 transition cursor-pointer">
+            Caregiver & Rx Scan
           </button>
         </div>
 
-        <button onclick="triggerDemoAlarm()" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 transition cursor-pointer">
+        <button onclick="triggerDemoAlarm()" class="px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm shadow-sm flex items-center gap-1.5 transition cursor-pointer">
           <span>🔔</span>
           <span>Test Live Alarm</span>
         </button>
@@ -47,152 +52,164 @@
     </div>
   </header>
 
+  <!-- Main Container -->
   <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
 
+    <!-- ==================== SENIOR VIEW (MAIN MEDICINE LIST) ==================== -->
     <section id="seniorView" class="space-y-6">
-      <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
+      <div class="bg-white/95 rounded-3xl p-6 border-2 border-purple-100 shadow-sm shadow-purple-900/5 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
         <div class="space-y-1.5">
-          <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-teal-50 text-teal-700 border border-teal-200">
-            Today's Routine
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-purple-100 text-purple-800 border border-purple-200">
+            <span>♥</span> Today's Routine
           </span>
           <h2 id="adherenceHeading" class="text-2xl sm:text-3xl font-extrabold text-slate-900">
             0 of 0 Medicines Taken Today
           </h2>
           <p class="text-sm sm:text-base text-slate-600">
-            Tap the green button after taking each pill, or tap <strong>Listen</strong> to hear instructions aloud.
+            Tap <strong>+ Add Medicine</strong> to add your own pills, or tap <strong>Listen</strong> to hear instructions aloud.
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-          <button onclick="speakFullSchedule()" class="px-5 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm sm:text-base shadow-md shadow-indigo-600/20 flex items-center gap-2 transition cursor-pointer">
-            <span>🔊</span>
-            <span>Read My Schedule Aloud</span>
+          <button onclick="openAddMedModal()" class="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm sm:text-base shadow-md shadow-purple-600/20 flex items-center gap-2 transition cursor-pointer">
+            <span class="text-lg leading-none">+</span>
+            <span>Add Medicine</span>
           </button>
-          <button onclick="resetDayProgress()" class="px-4 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm border border-slate-300 transition cursor-pointer">
+          <button onclick="speakFullSchedule()" class="px-5 py-3.5 rounded-2xl bg-purple-100 hover:bg-purple-200/80 text-purple-900 font-bold text-sm sm:text-base border border-purple-200 flex items-center gap-2 transition cursor-pointer">
+            <span>🔊</span>
+            <span>Read Schedule Aloud</span>
+          </button>
+          <button onclick="resetDayProgress()" class="px-4 py-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 font-bold text-xs sm:text-sm border border-purple-200 transition cursor-pointer">
             Reset Today
           </button>
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 border-2 border-slate-200">
-        <div class="flex justify-between text-sm font-bold text-slate-700 mb-2">
-          <span>Daily Completion</span>
-          <span id="progressPercent">0%</span>
+      <!-- Progress Bar -->
+      <div class="bg-white/95 rounded-2xl p-4 border-2 border-purple-100 shadow-sm shadow-purple-900/5">
+        <div class="flex justify-between text-sm font-bold text-purple-950 mb-2">
+          <span>♥ Daily Care Progress</span>
+          <span id="progressPercent" class="text-purple-700">0%</span>
         </div>
-        <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-          <div id="progressBar" class="h-full bg-teal-600 transition-all duration-500 rounded-full" style="width: 0%"></div>
+        <div class="w-full h-4 bg-purple-100/80 rounded-full overflow-hidden border border-purple-200/70">
+          <div id="progressBar" class="h-full bg-gradient-to-r from-purple-600 to-fuchsia-500 transition-all duration-500 rounded-full" style="width: 0%"></div>
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-2">
-        <button onclick="setSlotFilter('All')" id="tab-All" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer">All Doses</button>
-        <button onclick="setSlotFilter('Morning')" id="tab-Morning" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">☀️ Morning</button>
-        <button onclick="setSlotFilter('Afternoon')" id="tab-Afternoon" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">🌤️ Afternoon</button>
-        <button onclick="setSlotFilter('Night')" id="tab-Night" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer">🌙 Night</button>
+      <!-- Time Slot Filter Tabs -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setSlotFilter('All')" id="tab-All" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-gradient-to-r from-purple-700 to-violet-700 text-white shadow-sm cursor-pointer">All Doses</button>
+          <button onclick="setSlotFilter('Morning')" id="tab-Morning" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-purple-950 border-2 border-purple-100 hover:border-purple-300 cursor-pointer">☀️ Morning</button>
+          <button onclick="setSlotFilter('Afternoon')" id="tab-Afternoon" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-purple-950 border-2 border-purple-100 hover:border-purple-300 cursor-pointer">🌤️ Afternoon</button>
+          <button onclick="setSlotFilter('Night')" id="tab-Night" class="slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-purple-950 border-2 border-purple-100 hover:border-purple-300 cursor-pointer">🌙 Night</button>
+        </div>
       </div>
 
+      <!-- Medicine Cards Grid -->
       <div id="seniorCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
     </section>
 
+    <!-- ==================== CAREGIVER & PRESCRIPTION SCANNER VIEW ==================== -->
     <section id="caregiverView" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div class="lg:col-span-7 space-y-6">
-        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+        <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm">
           <div class="flex items-center justify-between gap-2 mb-2">
-            <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-indigo-50 text-indigo-700 border border-indigo-200">
-              Gemini 3.8 Multimodal AI
+            <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-purple-100 text-purple-800 border border-purple-200">
+              ♥ Smart Prescription Reader
             </span>
-            <button onclick="loadSamplePrescription()" class="text-xs font-bold text-teal-700 hover:underline cursor-pointer">
+            <button onclick="loadSamplePrescription()" class="text-xs font-bold text-purple-700 hover:underline cursor-pointer">
               Load Sample Doctor Note
             </button>
           </div>
           <h2 class="text-xl font-extrabold text-slate-900">Scan Prescription Photo or Doctor's Note</h2>
           <p class="text-sm text-slate-500 mt-1">
-            Upload a photo of a medicine strip/prescription or paste messy dosage notes—AI converts it into large senior reminders automatically.
+            Upload a photo of a medicine strip or prescription, or paste messy dosage notes to turn them into clear senior reminders automatically.
           </p>
 
           <div class="mt-4">
-            <label class="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl bg-slate-50 cursor-pointer transition">
-              <span class="text-sm font-bold text-slate-700" id="fileLabel">📷 Tap to Upload Prescription or Medicine Strip Photo</span>
-              <span class="text-xs text-slate-400 mt-0.5">Supports JPG, PNG, WebP (auto-compressed)</span>
+            <label class="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-purple-300 hover:border-purple-600 rounded-2xl bg-purple-50/50 cursor-pointer transition">
+              <span class="text-sm font-bold text-purple-950" id="fileLabel">📷 Tap to Upload Prescription or Medicine Strip Photo</span>
+              <span class="text-xs text-purple-700/70 mt-0.5">Supports JPG, PNG, WebP (auto-compressed)</span>
               <input type="file" id="rxImageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)" />
             </label>
-            <div id="imagePreviewWrap" class="hidden mt-3 flex items-center justify-between bg-teal-50 border border-teal-200 rounded-xl px-3.5 py-2">
-              <span id="imageNameText" class="text-xs font-bold text-teal-800 truncate">Image attached</span>
+            <div id="imagePreviewWrap" class="hidden mt-3 flex items-center justify-between bg-purple-50 border border-purple-200 rounded-xl px-3.5 py-2">
+              <span id="imageNameText" class="text-xs font-bold text-purple-900 truncate">Image attached</span>
               <button onclick="clearUploadedImage()" class="text-xs font-bold text-rose-600 hover:underline ml-3 cursor-pointer">Remove</button>
             </div>
           </div>
 
           <div class="mt-4">
-            <label for="rxTextInput" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label for="rxTextInput" class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1.5">
               Or Paste Prescription / Dosage Instructions
             </label>
             <textarea
               id="rxTextInput"
               rows="4"
               placeholder="Example: Tab Telma 40mg 1-0-0 before breakfast for BP. Tab Pan-D 1 cap empty stomach morning. Tab Metformin 500mg 1-0-1 after meals."
-              class="w-full rounded-2xl border-2 border-slate-200 p-3.5 text-sm text-slate-800 focus:outline-none focus:border-teal-600"
+              class="w-full rounded-2xl border-2 border-purple-100 p-3.5 text-sm text-slate-800 focus:outline-none focus:border-purple-600"
             ></textarea>
           </div>
 
           <button
             id="scanBtn"
             onclick="scanPrescriptionWithAI()"
-            class="mt-4 w-full py-3.5 px-5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 transition cursor-pointer"
+            class="mt-4 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm shadow-md shadow-purple-600/20 flex items-center justify-center gap-2 transition cursor-pointer"
           >
-            <span>✨ Extract Senior Schedule with AI</span>
+            <span>♥ Extract Senior Schedule</span>
           </button>
 
-          <div id="aiScanResultBox" class="hidden mt-5 p-4 rounded-2xl bg-slate-50 border-2 border-teal-200 space-y-3">
+          <div id="aiScanResultBox" class="hidden mt-5 p-4 rounded-2xl bg-purple-50/70 border-2 border-purple-200 space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold uppercase text-teal-700">AI Extracted Medicines</span>
-              <span id="scanEngineTag" class="text-[11px] font-bold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600"></span>
+              <span class="text-xs font-extrabold uppercase text-purple-800">Extracted Medicines</span>
+              <span id="scanEngineTag" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white border border-purple-200 text-purple-800"></span>
             </div>
-            <p id="doctorSummaryText" class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200"></p>
+            <p id="doctorSummaryText" class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-purple-100"></p>
             <div id="extractedList" class="space-y-2"></div>
-            <button onclick="applyExtractedMedicines()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
+            <button onclick="applyExtractedMedicines()" class="w-full py-3 rounded-xl bg-purple-900 hover:bg-purple-950 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
               + Add All Extracted Medicines to Schedule
             </button>
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+        <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 class="text-lg font-extrabold text-slate-900">AI Food-Timing & Safety Check</h3>
-              <p class="text-xs text-slate-500">Checks current medicine list for empty-stomach rules, spacing, and elderly precautions.</p>
+              <h3 class="text-lg font-extrabold text-slate-900">♥ Meal-Timing & Safety Check</h3>
+              <p class="text-xs text-slate-500">Reviews current medicine list for empty-stomach rules, spacing, and senior care tips.</p>
             </div>
-            <button onclick="runSafetyCheck()" id="safetyBtn" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
-              🩺 Run AI Safety Check
+            <button onclick="runSafetyCheck()" id="safetyBtn" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white font-bold text-xs sm:text-sm transition cursor-pointer">
+              🩺 Run Safety Check
             </button>
           </div>
 
-          <div id="safetyResultBox" class="hidden mt-4 p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-2.5">
+          <div id="safetyResultBox" class="hidden mt-4 p-4 rounded-2xl bg-purple-50/70 border border-purple-200 space-y-2.5">
             <div class="flex items-center justify-between">
-              <span id="safetyHeadline" class="text-sm font-extrabold text-indigo-950"></span>
-              <span id="safetyBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-600 text-white"></span>
+              <span id="safetyHeadline" class="text-sm font-extrabold text-purple-950"></span>
+              <span id="safetyBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-700 text-white"></span>
             </div>
             <div id="safetyAlertsList" class="space-y-2"></div>
-            <p id="elderlyTipText" class="text-xs font-medium text-slate-700 bg-white p-3 rounded-xl border border-indigo-100"></p>
+            <p id="elderlyTipText" class="text-xs font-medium text-slate-700 bg-white p-3 rounded-xl border border-purple-100"></p>
           </div>
         </div>
       </div>
 
       <div class="lg:col-span-5 space-y-6">
-        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm">
+        <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm">
           <h3 class="text-lg font-extrabold text-slate-900 mb-4">Add Medicine Manually</h3>
           <div class="space-y-3">
             <div>
               <label class="block text-xs font-bold text-slate-600 mb-1">Medicine Name & Strength</label>
-              <input id="manName" type="text" placeholder="e.g., Amlodipine 5mg" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+              <input id="manName" type="text" placeholder="e.g., Amlodipine 5mg" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-600" />
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Dosage</label>
-                <input id="manDosage" type="text" value="1 Tablet" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+                <input id="manDosage" type="text" value="1 Tablet" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-600" />
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Time Slot</label>
-                <select id="manSlot" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm bg-white">
+                <select id="manSlot" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-purple-600">
                   <option value="Morning">Morning (08:30 AM)</option>
                   <option value="Afternoon">Afternoon (01:30 PM)</option>
                   <option value="Night">Night (09:00 PM)</option>
@@ -202,88 +219,205 @@
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Meal Instruction</label>
-                <input id="manInstruction" type="text" value="After Food" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+                <input id="manInstruction" type="text" value="After Food" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-600" />
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-600 mb-1">Pills in Strip</label>
-                <input id="manStock" type="number" value="10" min="1" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+                <input id="manStock" type="number" value="10" min="1" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-600" />
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-600 mb-1">Simple Purpose (for Senior)</label>
-              <input id="manPurpose" type="text" placeholder="e.g., Keeps blood pressure steady" class="w-full rounded-xl border-2 border-slate-200 px-3.5 py-2.5 text-sm" />
+              <input id="manPurpose" type="text" placeholder="e.g., Keeps blood pressure steady" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm focus:outline-none focus:border-purple-600" />
             </div>
-            <button onclick="addManualMedicine()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition cursor-pointer">
+            <button onclick="addManualMedicine()" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-bold text-sm transition cursor-pointer">
               + Add to Schedule
             </button>
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl p-6 border-2 border-slate-200 shadow-sm space-y-4">
+        <div class="bg-white rounded-3xl p-6 border-2 border-purple-100 shadow-sm space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-extrabold text-slate-900">Caregiver Summary</h3>
-            <button onclick="restoreDefaults()" class="text-xs font-bold text-slate-500 hover:text-slate-900 cursor-pointer">Restore Demo Data</button>
+            <h3 class="text-lg font-extrabold text-slate-900">Complete Medicine List</h3>
+            <button onclick="restoreDefaults()" class="text-xs font-bold text-purple-600 hover:text-purple-900 cursor-pointer">Restore Demo Data</button>
           </div>
-          <p class="text-xs text-slate-500">Send today's adherence log and low-stock refill alerts to family members.</p>
-          <button onclick="copyCaregiverReport()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
-            <span>📋 Copy Family WhatsApp Status Update</span>
+          <p class="text-xs text-slate-500">Manage your listed medicines, top up pill counts, or share today's status with family.</p>
+          <button onclick="copyCaregiverReport()" class="w-full py-3 px-4 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 border border-purple-200 font-bold text-sm flex items-center justify-center gap-2 transition cursor-pointer">
+            <span>♥ Copy Family WhatsApp Status Update</span>
           </button>
-          <div id="caregiverManageList" class="divide-y divide-slate-100 pt-2"></div>
+          <div id="caregiverManageList" class="divide-y divide-purple-100 pt-2"></div>
         </div>
       </div>
     </section>
   </main>
 
-  <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-7 border-4 border-amber-400 shadow-2xl text-center space-y-5">
-      <div class="w-20 h-20 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-4xl animate-bounce">
-        ⏰
+  <!-- ==================== ADD NEW MEDICINE MODAL (USER SELF-SERVICE) ==================== -->
+  <div id="addMedModal" class="hidden fixed inset-0 z-50 bg-purple-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 border-2 border-purple-200 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-purple-100 pb-3">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900">♥ Add Your Own Medicine</h2>
+          <p class="text-xs text-slate-500">Enter medicine details below to add it to your daily list.</p>
+        </div>
+        <button onclick="closeAddMedModal()" class="w-9 h-9 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-900 font-extrabold text-lg cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Medicine Name & Strength *</label>
+          <input id="modalMedName" type="text" placeholder="e.g., Paracetamol 650mg or Vitamin D3" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-3 text-base font-medium focus:outline-none focus:border-purple-600" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Dosage</label>
+            <input id="modalMedDosage" type="text" value="1 Tablet" placeholder="e.g., 1 Tablet or 5 ml" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Time of Day</label>
+            <select id="modalMedSlot" onchange="syncModalSlotTime()" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-bold bg-white focus:outline-none focus:border-purple-600">
+              <option value="Morning">☀️ Morning</option>
+              <option value="Afternoon">🌤️ Afternoon</option>
+              <option value="Night">🌙 Night</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Reminder Time</label>
+            <input id="modalMedTime" type="text" value="08:30 AM" placeholder="e.g., 08:30 AM" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Pills Available</label>
+            <input id="modalMedStock" type="number" value="10" min="1" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">Food / Meal Instruction</label>
+          <input id="modalMedInstruction" list="mealOptions" value="After Food" placeholder="e.g., After Breakfast or Empty Stomach" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+          <datalist id="mealOptions">
+            <option value="Empty Stomach (30 mins before food)">
+            <option value="After Breakfast">
+            <option value="After Lunch">
+            <option value="After Dinner">
+            <option value="Before Sleep">
+          </datalist>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-purple-900/70 mb-1">What is this medicine for?</label>
+          <input id="modalMedPurpose" type="text" placeholder="e.g., Fever relief, Blood pressure, Calcium" class="w-full rounded-xl border-2 border-purple-100 px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-purple-600" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <button onclick="saveModalMedicine()" class="py-3.5 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-sm sm:text-base shadow-md cursor-pointer">
+          ♥ Save to My List
+        </button>
+        <button onclick="closeAddMedModal()" class="py-3.5 px-4 rounded-2xl bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold text-sm sm:text-base cursor-pointer">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FULL-SCREEN VOICE ALARM MODAL ==================== -->
+  <div id="alarmModal" class="hidden fixed inset-0 z-50 bg-purple-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-7 border-4 border-purple-400 shadow-2xl text-center space-y-5">
+      <div class="w-20 h-20 mx-auto rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-4xl animate-bounce">
+        ♥
       </div>
       <div class="space-y-1">
-        <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-amber-100 text-amber-800">
+        <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase bg-purple-100 text-purple-800">
           Medicine Reminder Now
         </span>
         <h2 id="alarmMedName" class="text-3xl font-extrabold text-slate-900 pt-2">Metformin 500mg</h2>
-        <p id="alarmMedDetails" class="text-lg font-bold text-teal-700">1 Tablet • After Breakfast</p>
+        <p id="alarmMedDetails" class="text-lg font-bold text-purple-700">1 Tablet • After Breakfast</p>
         <p id="alarmMedPurpose" class="text-sm text-slate-500">Purpose: Controls blood sugar</p>
       </div>
 
-      <button onclick="speakAlarmCurrent()" class="px-4 py-2 rounded-xl bg-indigo-50 text-indigo-700 font-bold text-xs border border-indigo-200 cursor-pointer">
+      <button onclick="speakAlarmCurrent()" class="px-4 py-2 rounded-xl bg-purple-50 text-purple-800 font-bold text-xs border border-purple-200 cursor-pointer">
         🔊 Repeat Voice Reminder
       </button>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-        <button onclick="confirmAlarmTaken()" class="py-4 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-lg shadow-lg cursor-pointer">
-          ✓ I Took It
+        <button onclick="confirmAlarmTaken()" class="py-4 px-5 rounded-2xl bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-extrabold text-lg shadow-lg cursor-pointer">
+          ♥ I Took It
         </button>
-        <button onclick="closeAlarmModal()" class="py-4 px-5 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold text-lg cursor-pointer">
+        <button onclick="closeAlarmModal()" class="py-4 px-5 rounded-2xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-extrabold text-lg cursor-pointer">
           Snooze 10m
         </button>
       </div>
     </div>
   </div>
 
-  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-    MediTrack AI • Accessible Healthcare Assistant • Always follow your doctor's prescribed dosage
+  <footer class="bg-white/90 border-t border-purple-100 py-4 text-center text-xs text-purple-900/70">
+    CarePulse <span class="text-purple-600 font-bold">♥</span> • Gentle Healthcare Companion • Always follow your doctor's prescribed dosage
   </footer>
 
   <script>
     const DEFAULT_MEDICINES = [
       { id: "m1", name: "Pan-D Capsule", dosage: "1 Capsule", slot: "Morning", time: "07:30 AM", instruction: "Empty Stomach (30 mins before food)", purpose: "Protects stomach from acidity", pillColor: "amber", stock: 8, taken: true, takenAt: "07:35 AM" },
-      { id: "m2", name: "Telma 40mg", dosage: "1 Tablet", slot: "Morning", time: "08:30 AM", instruction: "After Breakfast", purpose: "Keeps blood pressure steady", pillColor: "blue", stock: 3, taken: false, takenAt: null },
-      { id: "m3", name: "Shelcal 500mg", dosage: "1 Tablet", slot: "Afternoon", time: "01:30 PM", instruction: "After Lunch", purpose: "Bone strength & calcium support", pillColor: "emerald", stock: 12, taken: false, takenAt: null },
-      { id: "m4", name: "Metformin 500mg", dosage: "1 Tablet", slot: "Night", time: "09:00 PM", instruction: "After Dinner", purpose: "Controls blood sugar overnight", pillColor: "rose", stock: 6, taken: false, takenAt: null }
+      { id: "m2", name: "Telma 40mg", dosage: "1 Tablet", slot: "Morning", time: "08:30 AM", instruction: "After Breakfast", purpose: "Keeps blood pressure steady", pillColor: "purple", stock: 3, taken: false, takenAt: null },
+      { id: "m3", name: "Shelcal 500mg", dosage: "1 Tablet", slot: "Afternoon", time: "01:30 PM", instruction: "After Lunch", purpose: "Bone strength & calcium support", pillColor: "fuchsia", stock: 12, taken: false, takenAt: null },
+      { id: "m4", name: "Metformin 500mg", dosage: "1 Tablet", slot: "Night", time: "09:00 PM", instruction: "After Dinner", purpose: "Controls blood sugar overnight", pillColor: "violet", stock: 6, taken: false, takenAt: null }
     ];
 
-    let medicines = JSON.parse(localStorage.getItem("meditrack_v1")) || JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
+    let medicines;
+    try {
+      const saved = JSON.parse(localStorage.getItem("carepulse_v1"));
+      medicines = Array.isArray(saved) ? saved : JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
+    } catch (e) {
+      medicines = JSON.parse(JSON.stringify(DEFAULT_MEDICINES));
+    }
+
     let currentSlotFilter = "All";
     let uploadedImageBase64 = "";
     let uploadedImageMime = "image/jpeg";
     let pendingExtractedMeds = [];
     let activeAlarmMedId = null;
+    let cachedFemaleVoice = null;
+
+    function selectFemaleVoice() {
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || !voices.length) return null;
+
+      const preferredNames = [
+        "samantha", "ava", "allison", "susan", "karen", "moira", "tessa",
+        "veena", "aria", "jenny", "sonia", "natasha", "libby", "claire",
+        "google uk english female", "google us english", "microsoft zira",
+        "microsoft aria", "microsoft jenny", "female", "woman"
+      ];
+      const maleNames = ["daniel", "alex", "fred", "rishi", "ravi", "david", "mark", "thomas", "male", "man"];
+
+      for (const target of preferredNames) {
+        const match = voices.find(v => v.name.toLowerCase().includes(target) && v.lang.toLowerCase().startsWith("en"));
+        if (match) {
+          cachedFemaleVoice = match;
+          return match;
+        }
+      }
+
+      const fallbackEn = voices.find(v =>
+        v.lang.toLowerCase().startsWith("en") &&
+        !maleNames.some(m => v.name.toLowerCase().includes(m))
+      );
+      cachedFemaleVoice = fallbackEn || voices[0];
+      return cachedFemaleVoice;
+    }
+
+    if ("speechSynthesis" in window) {
+      selectFemaleVoice();
+      window.speechSynthesis.onvoiceschanged = selectFemaleVoice;
+    }
 
     function saveState() {
-      localStorage.setItem("meditrack_v1", JSON.stringify(medicines));
+      localStorage.setItem("carepulse_v1", JSON.stringify(medicines));
       renderAll();
     }
 
@@ -296,22 +430,66 @@
       if (mode === "senior") {
         seniorView.classList.remove("hidden");
         caregiverView.classList.add("hidden");
-        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer";
-        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer";
+        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer";
+        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-purple-900/70 hover:text-purple-950 transition cursor-pointer";
       } else {
         seniorView.classList.add("hidden");
         caregiverView.classList.remove("hidden");
-        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-teal-600 text-white shadow-sm transition cursor-pointer";
-        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer";
+        btnC.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-purple-600 to-violet-600 text-white shadow-sm transition cursor-pointer";
+        btnS.className = "px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold text-purple-900/70 hover:text-purple-950 transition cursor-pointer";
       }
+    }
+
+    function openAddMedModal() {
+      document.getElementById("addMedModal").classList.remove("hidden");
+      setTimeout(() => document.getElementById("modalMedName").focus(), 50);
+    }
+
+    function closeAddMedModal() {
+      document.getElementById("addMedModal").classList.add("hidden");
+    }
+
+    function syncModalSlotTime() {
+      const slot = document.getElementById("modalMedSlot").value;
+      const defaultTimes = { Morning: "08:30 AM", Afternoon: "01:30 PM", Night: "09:00 PM" };
+      document.getElementById("modalMedTime").value = defaultTimes[slot] || "08:30 AM";
+    }
+
+    function saveModalMedicine() {
+      const name = document.getElementById("modalMedName").value.trim();
+      if (!name) {
+        alert("Please enter the medicine name first.");
+        return;
+      }
+      const slot = document.getElementById("modalMedSlot").value;
+      const defaultTimes = { Morning: "08:30 AM", Afternoon: "01:30 PM", Night: "09:00 PM" };
+      medicines.push({
+        id: "user_" + Date.now(),
+        name: name,
+        dosage: document.getElementById("modalMedDosage").value.trim() || "1 Tablet",
+        slot: slot,
+        time: document.getElementById("modalMedTime").value.trim() || defaultTimes[slot],
+        instruction: document.getElementById("modalMedInstruction").value.trim() || "After Food",
+        purpose: document.getElementById("modalMedPurpose").value.trim() || "Daily prescribed care",
+        pillColor: slot === "Morning" ? "purple" : slot === "Afternoon" ? "fuchsia" : "violet",
+        stock: parseInt(document.getElementById("modalMedStock").value, 10) || 10,
+        taken: false,
+        takenAt: null
+      });
+
+      document.getElementById("modalMedName").value = "";
+      document.getElementById("modalMedPurpose").value = "";
+      closeAddMedModal();
+      saveState();
+      speakText("Added " + name + " to your " + slot + " medicine list.");
     }
 
     function setSlotFilter(slot) {
       currentSlotFilter = slot;
       document.querySelectorAll(".slot-tab").forEach(btn => {
-        btn.className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-slate-700 border-2 border-slate-200 cursor-pointer";
+        btn.className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-white text-purple-950 border-2 border-purple-100 hover:border-purple-300 cursor-pointer";
       });
-      document.getElementById("tab-" + slot).className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-slate-900 text-white cursor-pointer";
+      document.getElementById("tab-" + slot).className = "slot-tab px-5 py-2.5 rounded-2xl font-extrabold text-sm bg-gradient-to-r from-purple-700 to-violet-700 text-white shadow-sm cursor-pointer";
       renderSeniorCards();
     }
 
@@ -345,20 +523,23 @@
       if (!("speechSynthesis" in window)) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.92;
+      const voice = cachedFemaleVoice || selectFemaleVoice();
+      if (voice) utterance.voice = voice;
+      utterance.rate = 0.94;
+      utterance.pitch = 1.08;
       window.speechSynthesis.speak(utterance);
     }
 
     function speakSingleMed(id) {
       const m = medicines.find(item => item.id === id);
       if (!m) return;
-      speakText(m.slot + " medicine at " + m.time + ". Take " + m.dosage + " of " + m.name + ", " + m.instruction + ". This is for " + m.purpose + ".");
+      speakText(m.slot + " medicine at " + m.time + ". Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ". This helps with " + m.purpose + ".");
     }
 
     function speakFullSchedule() {
       const pending = medicines.filter(m => !m.taken);
       if (!pending.length) {
-        speakText("Great job! You have taken all of your medicines for today.");
+        speakText("Wonderful job! You have taken all of your medicines for today.");
         return;
       }
       const summary = pending.map(m => m.slot + " at " + m.time + ": " + m.dosage + " of " + m.name + ", " + m.instruction).join(". ");
@@ -367,7 +548,10 @@
 
     function triggerDemoAlarm() {
       const nextMed = medicines.find(m => !m.taken) || medicines[0];
-      if (!nextMed) return;
+      if (!nextMed) {
+        alert("Your medicine list is empty. Tap '+ Add Medicine' to add one first!");
+        return;
+      }
       activeAlarmMedId = nextMed.id;
       document.getElementById("alarmMedName").textContent = nextMed.name;
       document.getElementById("alarmMedDetails").textContent = nextMed.dosage + " • " + nextMed.instruction;
@@ -379,7 +563,7 @@
     function speakAlarmCurrent() {
       const m = medicines.find(item => item.id === activeAlarmMedId);
       if (!m) return;
-      speakText("Medicine Reminder! Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ".");
+      speakText("Gentle medicine reminder. Please take " + m.dosage + " of " + m.name + ", " + m.instruction + ".");
     }
 
     function confirmAlarmTaken() {
@@ -411,31 +595,52 @@
       grid.innerHTML = "";
       const filtered = currentSlotFilter === "All" ? medicines : medicines.filter(m => m.slot === currentSlotFilter);
       const pillColors = {
-        blue: "bg-blue-100 text-blue-800 border-blue-200",
-        amber: "bg-amber-100 text-amber-800 border-amber-200",
-        emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
-        rose: "bg-rose-100 text-rose-800 border-rose-200"
+        purple: "bg-purple-100 text-purple-900 border-purple-200",
+        amber: "bg-amber-100 text-amber-900 border-amber-200",
+        fuchsia: "bg-fuchsia-100 text-fuchsia-900 border-fuchsia-200",
+        violet: "bg-violet-100 text-violet-900 border-violet-200",
+        blue: "bg-purple-100 text-purple-900 border-purple-200",
+        emerald: "bg-fuchsia-100 text-fuchsia-900 border-fuchsia-200",
+        rose: "bg-pink-100 text-pink-900 border-pink-200"
       };
 
       filtered.forEach(med => {
-        const badgeStyle = pillColors[med.pillColor] || pillColors.blue;
+        const badgeStyle = pillColors[med.pillColor] || pillColors.purple;
         const lowStock = med.stock <= 3;
         const card = document.createElement("div");
-        card.className = "senior-card rounded-3xl p-6 border-2 shadow-sm flex flex-col justify-between gap-5 " + (med.taken ? "bg-emerald-50/60 border-emerald-300" : "bg-white border-slate-200");
-        card.innerHTML = '<div class="space-y-3"><div class="flex items-center justify-between gap-2"><span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ' + badgeStyle + '">' + escapeHtml(med.slot) + ' • ' + escapeHtml(med.time) + '</span><button onclick="speakSingleMed(\'' + med.id + '\')" class="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs sm:text-sm border border-indigo-200 cursor-pointer">🔊 Listen</button></div><div><h3 class="text-2xl font-extrabold text-slate-900">' + escapeHtml(med.name) + '</h3><p class="text-base font-bold text-teal-700 mt-0.5">' + escapeHtml(med.dosage) + ' — ' + escapeHtml(med.instruction) + '</p><p class="text-sm text-slate-600 mt-1">For: ' + escapeHtml(med.purpose) + '</p></div>' + (lowStock ? '<div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">⚠️ Low Stock Alert: Only ' + med.stock + ' pills left — Refill soon</div>' : '<div class="text-xs font-semibold text-slate-400">Remaining in strip: ' + med.stock + ' pills</div>') + '</div><button onclick="toggleTaken(\'' + med.id + '\')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ' + (med.taken ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-slate-900 text-white hover:bg-teal-600') + '">' + (med.taken ? '✓ TAKEN AT ' + escapeHtml(med.takenAt) + ' (Tap to Undo)' : '✓ MARK AS TAKEN') + '</button>';
+        card.className = "senior-card rounded-3xl p-6 border-2 shadow-sm flex flex-col justify-between gap-5 " + (med.taken ? "bg-purple-50/90 border-purple-300" : "bg-white border-purple-100");
+        card.innerHTML = '<div class="space-y-3"><div class="flex items-center justify-between gap-2"><span class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border ' + badgeStyle + '">' + escapeHtml(med.slot) + ' • ' + escapeHtml(med.time) + '</span><button onclick="speakSingleMed(\'' + med.id + '\')" class="px-3.5 py-2 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs sm:text-sm border border-purple-200 cursor-pointer">🔊 Listen</button></div><div><h3 class="text-2xl font-extrabold text-slate-900">' + escapeHtml(med.name) + '</h3><p class="text-base font-bold text-purple-700 mt-0.5">' + escapeHtml(med.dosage) + ' — ' + escapeHtml(med.instruction) + '</p><p class="text-sm text-slate-600 mt-1">For: ' + escapeHtml(med.purpose) + '</p></div>' + (lowStock ? '<div class="px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-xs font-extrabold text-rose-700">⚠️ Low Stock Alert: Only ' + med.stock + ' pills left — Refill soon</div>' : '<div class="text-xs font-semibold text-purple-900/50">Remaining in strip: ' + med.stock + ' pills</div>') + '</div><button onclick="toggleTaken(\'' + med.id + '\')" class="w-full py-4 px-5 rounded-2xl font-extrabold text-base sm:text-lg shadow-sm transition cursor-pointer ' + (med.taken ? 'bg-purple-200 text-purple-950 hover:bg-purple-300' : 'bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-700 hover:to-violet-700') + '">' + (med.taken ? '♥ TAKEN AT ' + escapeHtml(med.takenAt) + ' (Tap to Undo)' : '♥ MARK AS TAKEN') + '</button>';
         grid.appendChild(card);
       });
+
+      const addCard = document.createElement("button");
+      addCard.type = "button";
+      addCard.onclick = openAddMedModal;
+      addCard.className = "senior-card rounded-3xl p-6 border-2 border-dashed border-purple-300 hover:border-purple-600 bg-white/80 hover:bg-purple-50/60 flex flex-col items-center justify-center text-center gap-2 min-h-[240px] cursor-pointer transition";
+      addCard.innerHTML = '<div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-3xl font-extrabold">+</div><div class="text-lg font-extrabold text-slate-900">Add Your Own Medicine</div><p class="text-xs text-slate-500 max-w-xs">Tap here to add a new tablet, capsule, or syrup to your daily list.</p>';
+      grid.appendChild(addCard);
     }
 
     function renderCaregiverManageList() {
       const list = document.getElementById("caregiverManageList");
       list.innerHTML = "";
+      if (!medicines.length) {
+        list.innerHTML = '<p class="text-xs text-slate-400 py-3">No medicines listed yet. Add one above or scan a prescription.</p>';
+        return;
+      }
       medicines.forEach(med => {
         const row = document.createElement("div");
-        row.className = "py-2.5 flex items-center justify-between gap-2 text-xs";
-        row.innerHTML = '<div><span class="font-bold text-slate-800">' + escapeHtml(med.name) + '</span><span class="text-slate-500"> (' + escapeHtml(med.slot) + ' • ' + med.stock + ' left)</span></div><button onclick="deleteMedicine(\'' + med.id + '\')" class="text-rose-600 font-bold hover:underline cursor-pointer">Remove</button>';
+        row.className = "py-3 flex items-center justify-between gap-2 text-xs";
+        row.innerHTML = '<div><div class="font-bold text-slate-800">' + escapeHtml(med.name) + ' <span class="text-purple-700">(' + escapeHtml(med.dosage) + ')</span></div><div class="text-slate-500">' + escapeHtml(med.slot) + ' • ' + escapeHtml(med.time) + ' • ' + med.stock + ' pills left</div></div><div class="flex items-center gap-2"><button onclick="refillMedicine(\'' + med.id + '\')" class="px-2 py-1 rounded bg-purple-50 text-purple-700 font-bold border border-purple-200 hover:bg-purple-100 cursor-pointer">+10 Refill</button><button onclick="deleteMedicine(\'' + med.id + '\')" class="px-2 py-1 rounded bg-rose-50 text-rose-600 font-bold border border-rose-200 hover:bg-rose-100 cursor-pointer">Remove</button></div>';
         list.appendChild(row);
       });
+    }
+
+    function refillMedicine(id) {
+      const med = medicines.find(m => m.id === id);
+      if (!med) return;
+      med.stock += 10;
+      saveState();
     }
 
     function deleteMedicine(id) {
@@ -456,7 +661,7 @@
         time: defaultTimes[slot],
         instruction: document.getElementById("manInstruction").value.trim() || "After Food",
         purpose: document.getElementById("manPurpose").value.trim() || "Daily prescribed care",
-        pillColor: slot === "Morning" ? "blue" : slot === "Afternoon" ? "emerald" : "rose",
+        pillColor: slot === "Morning" ? "purple" : slot === "Afternoon" ? "fuchsia" : "violet",
         stock: parseInt(document.getElementById("manStock").value, 10) || 10,
         taken: false,
         takenAt: null
@@ -513,7 +718,7 @@
         return;
       }
       const btn = document.getElementById("scanBtn");
-      btn.textContent = "⏳ AI Reading Prescription...";
+      btn.textContent = "⏳ Reading Prescription...";
       btn.disabled = true;
 
       try {
@@ -522,13 +727,13 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "parse_prescription", text: text, imageBase64: uploadedImageBase64, mimeType: uploadedImageMime })
         });
-        if (!res.ok) throw new Error("API fallback");
+        if (!res.ok) throw new Error("Fallback");
         const data = await res.json();
         showExtractedPreview(data);
       } catch (err) {
         showExtractedPreview(localFallbackParse(text));
       } finally {
-        btn.textContent = "✨ Extract Senior Schedule with AI";
+        btn.textContent = "♥ Extract Senior Schedule";
         btn.disabled = false;
       }
     }
@@ -542,21 +747,21 @@
         time: /night|dinner|0-0-1/i.test(line) ? "09:00 PM" : /lunch|afternoon|0-1-0/i.test(line) ? "01:30 PM" : "08:30 AM",
         instruction: /empty/i.test(line) ? "Empty Stomach" : "After Food",
         purpose: "Prescribed daily care",
-        pillColor: i % 2 === 0 ? "blue" : "emerald"
+        pillColor: i % 2 === 0 ? "purple" : "fuchsia"
       }));
-      return { source: "smart-parser", medicines: parsed, doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders." };
+      return { source: "smart-reader", medicines: parsed, doctorNoteSummary: "Schedule organized into clear Morning, Afternoon, and Night meal-timed reminders." };
     }
 
     function showExtractedPreview(data) {
       pendingExtractedMeds = data.medicines || [];
       document.getElementById("aiScanResultBox").classList.remove("hidden");
-      document.getElementById("scanEngineTag").textContent = data.source === "gemini-ai" ? "Gemini 3.8 AI" : "Smart Parser";
+      document.getElementById("scanEngineTag").textContent = "♥ CarePulse Reader";
       document.getElementById("doctorSummaryText").textContent = data.doctorNoteSummary || "Extracted daily schedule below:";
       const list = document.getElementById("extractedList");
       list.innerHTML = "";
       pendingExtractedMeds.forEach(m => {
         const div = document.createElement("div");
-        div.className = "p-3 rounded-xl bg-white border border-slate-200 text-xs flex justify-between items-center";
+        div.className = "p-3 rounded-xl bg-white border border-purple-100 text-xs flex justify-between items-center";
         div.innerHTML = '<div><div class="font-extrabold text-slate-900">' + escapeHtml(m.name) + ' (' + escapeHtml(m.dosage) + ')</div><div class="text-slate-500">' + escapeHtml(m.slot) + ' • ' + escapeHtml(m.instruction) + ' — ' + escapeHtml(m.purpose) + '</div></div>';
         list.appendChild(div);
       });
@@ -565,14 +770,14 @@
     function applyExtractedMedicines() {
       pendingExtractedMeds.forEach((m, idx) => {
         medicines.push({
-          id: "ai_" + Date.now() + "_" + idx,
+          id: "rx_" + Date.now() + "_" + idx,
           name: m.name,
           dosage: m.dosage || "1 Tablet",
           slot: m.slot || "Morning",
           time: m.time || "08:30 AM",
           instruction: m.instruction || "After Food",
           purpose: m.purpose || "Daily care",
-          pillColor: m.pillColor || "blue",
+          pillColor: m.slot === "Afternoon" ? "fuchsia" : m.slot === "Night" ? "violet" : "purple",
           stock: 10,
           taken: false,
           takenAt: null
@@ -604,7 +809,7 @@
           elderlyTip: "Keep a full bottle of water next to the morning pill organizer to prevent skipped doses."
         });
       } finally {
-        btn.textContent = "🩺 Run AI Safety Check";
+        btn.textContent = "🩺 Run Safety Check";
         btn.disabled = false;
       }
     }
@@ -613,23 +818,23 @@
       document.getElementById("safetyResultBox").classList.remove("hidden");
       document.getElementById("safetyHeadline").textContent = data.headline;
       document.getElementById("safetyBadge").textContent = data.safetyStatus;
-      document.getElementById("elderlyTipText").textContent = "💡 Senior Care Tip: " + data.elderlyTip;
+      document.getElementById("elderlyTipText").textContent = "♥ Senior Care Tip: " + data.elderlyTip;
       const list = document.getElementById("safetyAlertsList");
       list.innerHTML = "";
       (data.alerts || []).forEach(a => {
         const div = document.createElement("div");
-        div.className = "p-3 rounded-xl bg-white border border-indigo-100 text-xs";
+        div.className = "p-3 rounded-xl bg-white border border-purple-100 text-xs";
         div.innerHTML = '<strong class="text-slate-900">' + escapeHtml(a.title) + ':</strong> <span class="text-slate-600">' + escapeHtml(a.detail) + '</span>';
         list.appendChild(div);
       });
     }
 
     function copyCaregiverReport() {
-      const taken = medicines.filter(m => m.taken).map(m => "✅ " + m.name + " (" + m.takenAt + ")");
+      const taken = medicines.filter(m => m.taken).map(m => "♥ " + m.name + " (" + m.takenAt + ")");
       const pending = medicines.filter(m => !m.taken).map(m => "⏳ " + m.name + " (" + m.slot + ")");
       const lowStock = medicines.filter(m => m.stock <= 3).map(m => "⚠️ Refill " + m.name + " (" + m.stock + " left)");
       const report = [
-        "📋 *MediTrack Daily Caregiver Update*",
+        "♥ *CarePulse Daily Caregiver Update*",
         "Completed (" + taken.length + "/" + medicines.length + "):",
         ...(taken.length ? taken : ["None yet"]),
         "",
